@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 export default function item({ title, description, date, status, priority, background, id, onSubmit, setmessage }) {
 
     const [isOpen, setIsOpen] = useState(false)
-    const { data }
+
 
     let Deleted = () => setmessage("Deleted Todo Successfully")
 
