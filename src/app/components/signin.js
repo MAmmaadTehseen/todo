@@ -31,7 +31,7 @@ export default function item() {
 
   const handleSubmit = async (e) => {
 
-
+    setError("")
     setSignin(true)
     e.preventDefault()
     try {
@@ -41,7 +41,7 @@ export default function item() {
         redirect: false,
       })
       if (res.error) {
-        console.log(res);
+
         setError("invalid credentials")
         setSignin(false)
         return

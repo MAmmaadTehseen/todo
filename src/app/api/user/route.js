@@ -32,7 +32,7 @@ export async function GET(req, res) {
 
 
         const fetchUser = await User.find({});
-        console.log("getting USer")
+        // console.log("getting USer")
         return NextResponse.json(fetchUser)
     }
     catch (error) {
@@ -53,23 +53,27 @@ export async function PUT(req) {
     if (email) { newUser.email = email }
     if (url) { newUser.url = url }
 
-    if (password) { newUser.password = password }
     await connectToMongo()
+    if (password) {
+        newUser.password = password
 
-    const user = await User.findById(id);
-    const matchedpassword = await bcrypt.compare(check, user.password)
-    if (!matchedpassword) {
-        return NextResponse.json({ mes: "ammad", status: "400" })
+        const user = await User.findById(id);
+        const matchedpassword = await bcrypt.compare(check, user.password)
+        if (!matchedpassword) {
+            return NextResponse.json({ mes: "Wrong Password" }, {
+                status: 400,
+            })
+        }
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(password, salt)
+        newUser.password = hash
+
     }
-    const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(password, salt)
-    newUser.password = hash
-
 
 
 
     let todo = await User.findByIdAndUpdate(id, { $set: newUser })
-    return NextResponse.json({ msg: "ammad34" })
+    return NextResponse.json(todo, { status: 200 })
 
 
 

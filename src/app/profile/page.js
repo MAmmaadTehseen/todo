@@ -4,6 +4,12 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@nextui-org/react";
 import { AvatarComponent } from 'avatar-initials';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import Modal from 'react-modal'
+import GetImage from "../components/getImage";
+import Image from "next/image";
+
 
 
 
@@ -22,7 +28,13 @@ export default function profile() {
     const [password2, setPassword2] = useState("")
     const [error, setError] = useState("");
     const [initials, setinitials] = useState("AM")
-    const [clicked, setClicked] = useState(true);
+    const [clicked, setClicked] = useState(false);
+    const [isOpen, setIsOpen] = useState(false)
+    const [user, setUser] = useState()
+    const handleSubmit = () => {
+        setIsOpen(false);
+
+    };
     useEffect(() => {
         let inint = (session?.user?.name)
         async function fetchdata() {
@@ -42,7 +54,24 @@ export default function profile() {
         }
 
     }, [session])
-    const createUser = async () => {
+    useEffect(() => {
+
+        async function fetchdata() {
+
+
+            const url = `/api/singleUser/?id=${session?.user?.id}`
+            const res = await fetch(url, { cache: "no-cache" });
+            setUser(await res.json());
+
+
+        }
+        if (session) {
+            fetchdata()
+
+        }
+
+    })
+    const updateUser = async () => {
 
         setError()
         // if (url == "") {
@@ -86,12 +115,42 @@ export default function profile() {
             }),
         });
         console.log(newPassword)
-        console.log(updateUser)
+        console.log(updateUser.status)
         setLoading(false)
-        if (!updateUser) {
+        if (updateUser.status == 400) {
             setError("wrong password")
+            return
         }
 
+        if (updateUser.status == 200) {
+            setError("Password changed")
+            return
+        }
+
+        setClicked(false)
+
+    }
+    const changePassword = (e) => {
+        e.preventDefault()
+        clicked ? setClicked(false) : setClicked(true)
+    }
+    const customStyles = {
+        overlay: {
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            alignItems: "center"
+        },
+        content: {
+            // backgroundColor: 'rgba(0, 0, 0, 0.7)'
+            backgroundColor: "white",
+            maxWidth: "fit-content",
+            maxHeight: "fit-content",
+            display: "",
+            top: "25px",
+            left: "40%",
+            border: "3px solid blue",
+            borderRadius: "30px"
+
+        }
     }
 
     return (
@@ -110,29 +169,41 @@ export default function profile() {
                     </div>
                     <div className="flex justify-center">
                         <div className="flex  min-h-full shadow-2xl border border-gray-300 rounded-xl mt-5 flex-col justify-center px-6 py-12 lg:px-8">
-                            <div className="flex flex-row justify-center items-center sm:mx-auto sm:w-full sm:max-w-sm">
+                            <div className="flex  justify-center items-center sm:mx-auto sm:w-full sm:max-w-sm">
                                 <h2 className=" p-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Profile </h2>
-                                <div className=" h-20 w-20 justify-center">
-                                    <AvatarComponent
-                                        classes="rounded-full"
-                                        useGravatar={false}
-                                        size={120}
-                                        primarySource={session?.user?.url}
-                                        color="#000000"
-                                        background="#BFCA98"
-                                        fontSize={60}
+                                <div className="flex justify-center">
+
+                                    <div className="relative h-20 w-20 justify-center">
+                                        <AvatarComponent
+                                            classes="rounded-full"
+                                            useGravatar={false}
+                                            size={120}
+                                            // primarySource={user?.url}
+                                            color="#000000"
+                                            background="#BFCA98"
+                                            fontSize={60}
 
 
-                                        fontWeight={400}
-                                        offsetY={60}
-                                        initials={initials}
-                                    />
-
-                                    {/* {!user?.url && <Image className="border rounded-full" src={session.user.url} fill={true} alt="profile photo" />} */}
+                                            fontWeight={400}
+                                            offsetY={60}
+                                            initials={initials}
+                                        />
 
 
+                                        {user?.url && <Image className="border rounded-full" src={user.url} fill={true} alt="profile photo" />}
+
+                                        <div>
+                                            <button className=' bg-green-500 px-3 py-2 text-sm text-gray-700 mx-4 my-2 border-none rounded-xl' onClick={() => setIsOpen(true)}>Edit</button>
+                                            <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)} style={customStyles}>
+                                                <GetImage onSubmit={handleSubmit} />
+                                                <button className='absolute top-5 right-5' onClick={() => setIsOpen(false)}><FontAwesomeIcon style={{ fontSize: "25px" }} icon={faXmark}></FontAwesomeIcon></button>
+                                            </Modal>
+
+                                        </div>
+                                    </div>
 
                                 </div>
+
                             </div>
 
                             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
@@ -149,6 +220,7 @@ export default function profile() {
                                             <input readOnly value={email} onChange={(e) => { setEmail(e.target.value) }} required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                         </div>
                                     </div>
+                                    <button onClick={changePassword} className="bg-green-500 border-none rounded-md p-1">Change Password</button>
 
                                     {clicked && <div>
 
@@ -158,7 +230,7 @@ export default function profile() {
 
                                             </div>
                                             <div className="mt-2">
-                                                <input value={password} onChange={(e) => { setPassword(e.target.value) }} type="password" autoComplete="current-password" required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                                <input value={password} onChange={(e) => { setPassword(e.target.value) }} type="password" autoComplete="new-password" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                             </div>
                                         </div>
 
@@ -168,7 +240,7 @@ export default function profile() {
 
                                             </div>
                                             <div className="mt-2">
-                                                <input value={newPassword} onChange={(e) => { setNewPassword(e.target.value) }} type="password" autoComplete="current-password" required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                                <input value={newPassword} onChange={(e) => { setNewPassword(e.target.value) }} type="password" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                             </div>
                                         </div>
                                         <div>
@@ -177,7 +249,7 @@ export default function profile() {
 
                                             </div>
                                             <div className="mt-2">
-                                                <input value={password2} onChange={(e) => { setPassword2(e.target.value) }} type="password" autoComplete="current-password" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                                <input value={password2} onChange={(e) => { setPassword2(e.target.value) }} type="password" autocomplete="new-password" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                             </div>
                                         </div>
                                     </div>}
@@ -186,7 +258,7 @@ export default function profile() {
                                     </div>
                                     <div>
 
-                                        <Button onClick={createUser} className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                        <Button onClick={updateUser} className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                             isLoading={loading}
                                             disabled={disable}
                                             spinner={

@@ -15,26 +15,15 @@ export default function getImage({ onSubmit }) {
     const imageSumbition = (e) => {
         setDisable(true)
         const file = e.target.files[0];
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+        var reader = new FileReader();
+        reader.onloadend = function () {
+            setImageUrl(reader.result)
+            console.log('RESULT', reader.result)
+        }
+        reader.readAsDataURL(file);
+        setDisable(false)
 
-        fetch(CLOUDINARY_URL, {
-            method: 'POST',
-            body: formData,
-        })
-            .then(response => response.json())
-            .then((data) => {
-                if (data.secure_url !== '') {
-                    const uploadedFileUrl = data.secure_url;
 
-                    setImageUrl(uploadedFileUrl)
-
-                    setDisable(false)
-
-                }
-            })
-            .catch(err => console.error(err));
     }
 
 
@@ -58,9 +47,13 @@ export default function getImage({ onSubmit }) {
             }),
         });
         console.log("image")
+        if (!includeImage) {
+            setError("Error")
+            return
+        }
 
 
-        console.log(imageUrl)
+
         const close = () => onSubmit()
         close()
 

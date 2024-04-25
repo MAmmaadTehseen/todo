@@ -15,10 +15,17 @@ export default function Home() {
     const { data: session } = useSession()
     const [blogs, setblogs] = useState([])
     const [loading, setLoading] = useState()
+    const [showComponent, setShowComponent] = useState()
 
+    useEffect(() => {
+        setTimeout(() => {
+            closeMessage()
+        }, 3000);
+    }, [message])
     const handleSubmit = () => {
         setmessage("Added todo succesfully")
         setIsOpen(false);
+
 
 
     };
@@ -44,6 +51,8 @@ export default function Home() {
         }
 
     })
+
+
 
 
     const customStyles = {
@@ -101,7 +110,7 @@ export default function Home() {
                         {blogs.map(blog => (
                             <div key={blog._id}  >
 
-                                <TodoItem title={blog.title} id={blog._id} description={blog.description} date={blog.expiry} status={blog.status} priority={blog.priority} background={bg ? bg = false : bg = true} />
+                                <TodoItem title={blog.title} setmessage={setmessage} id={blog._id} description={blog.description} date={blog.expiry} status={blog.status} priority={blog.priority} background={bg ? bg = false : bg = true} />
 
 
                             </div>

@@ -1,18 +1,22 @@
 
 "use client"
+
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Modal from 'react-modal'
 import AddTodo from "../components/addTodo"
 import { faPenToSquare, faTrashCan, faXmark } from "@fortawesome/free-solid-svg-icons";
 import Message from "./message";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function item({ title, description, date, status, priority, background, id, onSubmit }) {
+export default function item({ title, description, date, status, priority, background, id, onSubmit, setmessage }) {
 
     const [isOpen, setIsOpen] = useState(false)
-    const [message, setmessage] = useState("")
+    const { data }
+
     let Deleted = () => setmessage("Deleted Todo Successfully")
+
+
 
     const handleSubmit = () => {
         setIsOpen(false);
@@ -21,7 +25,7 @@ export default function item({ title, description, date, status, priority, backg
     };
 
     const closeMessage = () => {
-        setmessage("")
+        // setmessage("")
     }
 
 
@@ -52,7 +56,7 @@ export default function item({ title, description, date, status, priority, backg
             maxWidth: "fit-content",
             maxHeight: "fit-content",
             display: "",
-            top: "25px",
+            top: "15px",
             left: "40%",
             border: "3px solid blue",
             borderRadius: "30px"
@@ -63,7 +67,7 @@ export default function item({ title, description, date, status, priority, backg
 
     return (
         <div className={`grid grid-cols-8 ${background == true ? "bg-gray-300" : ""}  border-2 border-cyan-700 rounded-lg w-full   p-2 mb-3`}>
-            <Message message={message} onClose={closeMessage} />
+            {/* <Message message={message} onClose={closeMessage} /> */}
             <div className="ml-2 w-10"><strong>{title.length <= 12 ? title : title.slice(0, 12) + "..."}</strong></div>
             <div className="col-span-3 ">{description.length < 40 ? description : description.slice(0, 40) + "...."}</div>
             <div className="">{date} days remaining</div>

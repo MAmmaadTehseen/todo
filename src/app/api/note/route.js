@@ -1,6 +1,6 @@
 import connectToMongo from "@/app/lib/mongodb";
 import { NextResponse } from "next/server";
-import Todo from "@/app/api/models/todoModel";
+import Note from "@/app/api/models/noteModel";
 
 
 
@@ -9,16 +9,16 @@ export async function POST(req) {
 
 
 
-        let { title, description, status, priority, expiry, userId } = await req.json()
+        let { description, todoId } = await req.json()
 
         await connectToMongo()
-        console.log("creating todo")
-        const createTodo = await Todo.create({ userId, title, description, status, priority, expiry })
-        console.log("created todo")
-        return NextResponse.json(createTodo)
+        console.log("creating note")
+        const createNote = await Note.create({ description, todoId })
+        console.log("created note")
+        return NextResponse.json(createNote)
     }
     catch (error) {
-        return NextResponse.json("error creating Todo", { status: 500 })
+        return NextResponse.json(error, { status: 500 })
     }
 
 
@@ -28,37 +28,15 @@ export async function POST(req) {
 export async function GET(req, res) {
     try {
         const searchParams = req.nextUrl.searchParams
-        const userId = await searchParams.get('id')
+        const todoId = await searchParams.get('id')
         await connectToMongo()
-        // console.log("getting Todo")
-        const fetchTodo = await Todo.find({ userId: userId });
+        // console.log("getting note")
+        const fetchTodo = await Note.find({ todoId: todoId });
         return NextResponse.json(fetchTodo)
     }
     catch (error) {
         console.log("error fetching data")
     }
-
-
-
-
-}
-
-export async function PUT(req) {
-
-    // requesting data from front-end
-    const { title, description, status, priority, expiry, id } = await req.json();
-    const newTodo = {}
-    if (title) { newTodo.title = title }
-    if (description) { newTodo.description = description }
-    if (status) { newTodo.status = status }
-    if (priority) { newTodo.priority = priority }
-    if (expiry) { newTodo.expiry = expiry }
-    await connectToMongo()
-
-
-
-    let todo = await Todo.findByIdAndUpdate(id, { $set: newTodo })
-    return NextResponse.json(todo)
 
 
 

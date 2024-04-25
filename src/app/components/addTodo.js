@@ -3,6 +3,8 @@ import { Button } from "@nextui-org/react";
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import Note from "./note";
+
 
 
 export default function addTodo({ task, id, onSubmit }) {
@@ -15,8 +17,28 @@ export default function addTodo({ task, id, onSubmit }) {
     const [expiry, setExpiry] = useState()
     const [loading, setLoading] = useState(false)
     const [disable, setDisable] = useState(false)
+    const [errorNote, setErrorNote] = useState("")
     const [error, setError] = useState("")
+    const [notes, setNotes] = useState(null)
+    const [note, setNote] = useState(null)
     let close = () => onSubmit()
+    useEffect(() => {
+        async function fetchdata() {
+
+
+            const url = `/api/note/?id=${id}`
+            const res = await fetch(url, { cache: "no-cache" });
+            if (res) { setNotes(await res.json()); }
+
+
+        }
+
+        if (task == "Update") {
+            fetchdata()
+
+        }
+
+    })
 
 
 
@@ -32,12 +54,20 @@ export default function addTodo({ task, id, onSubmit }) {
                 const res = await fetch(url, { cache: "no-cache" });
                 await res?.json().then((res) => {
                     setDisable(false)
-                    console.log("res", res)
+
                     setTitle(res.title)
                     setDescription(res.description)
                     setStatus(res.status)
                     setPriority(res.priority)
-                    setExpiry(res.expiry)
+
+                    var tomorrow = new Date();
+                    tomorrow.setDate(tomorrow.getDate() + res.expiry);
+                    let day = tomorrow.getDate()
+                    let month = tomorrow.getMonth() + 1
+                    let year = tomorrow.getYear() + 1900
+                    console.log(`${year}-${month < 10 ? "0" + month : month}-${day < 9 ? "0" + day : day}`)
+                    console.log(tomorrow)
+                    setExpiry(`${year}-${month}-${day}`)
                     if (!res) {
                         setError("loading failed")
                     }
@@ -47,8 +77,8 @@ export default function addTodo({ task, id, onSubmit }) {
                 })
 
             }
-
-            fetchdata()
+            if (session) { fetchdata() }
+            console.log(expiry)
 
         }, [])
     }
@@ -136,12 +166,31 @@ export default function addTodo({ task, id, onSubmit }) {
 
 
     };
+    const addNote = async () => {
+        if (!note) {
+            setErrorNote("Enter a note first")
+            return
+        }
+        const createdNote = await fetch('/api/note', {
+            method: 'Post',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+
+            body: JSON.stringify({
+
+                description: note, todoId: id,
+
+            }),
+        });
+        console.log(createdNote)
+    }
 
 
     return (
         <div className="">
 
-            <div className="min-w-full  min-h-full bg-white ">
+            <div className="min-w-full   bg-white ">
 
                 <div className="flex  flex-col   lg:px-8">
                     <div >
@@ -194,7 +243,7 @@ export default function addTodo({ task, id, onSubmit }) {
                         <div className=" my-2" >
 
                             <label className="block text-lg font-medium leading-6 text-gray-900" >Expiry:</label>
-                            <input type="date" onChange={(e) => { setExpiry(Math.ceil(((new Date(e.target.value) - new Date()) / (24 * 60 * 60 * 1000)) + 1)) }} className=" rounded-md border border-gray-400 py-1.5 text-gray-900 focus:ring-2 focus:ring-inset sm:max-w-xs sm:text-sm sm:leading-6 " ></input>
+                            <input type="date" value={expiry} onChange={(e) => { setExpiry(Math.ceil(((new Date(e.target.value) - new Date()) / (24 * 60 * 60 * 1000)))) }} className=" rounded-md border border-gray-400 py-1.5 text-gray-900 focus:ring-2 focus:ring-inset sm:max-w-xs sm:text-sm sm:leading-6 " ></input>
                         </div>
                         {error && <div className="bg-red-300 border border-red-600 rounded-md w-fit px-3">{error}</div>}
 
@@ -235,7 +284,26 @@ export default function addTodo({ task, id, onSubmit }) {
                     </div>
                 </div>
             </div>
+            {notes && <div className="relative border-t-4 border-dotted border-gray-600 m-2">
 
+                <h1 className="inline font-bold text-pretty border-b-4 border-double border-stone-600 text-lg">Notes</h1>
+                <div className="my-2">
+                    <textarea rows={1} value={note} onChange={(e) => { setNote(e.target.value) }} className=" rounded-md border border-gray-400 py-1.5 text-gray-900 " placeholder=" Add your Note" />
+                </div>
+                {errorNote && <div className="bg-red-300 border border-red-600 rounded-md w-fit mt-1    px-3">{errorNote}</div>}
+                <button className='absolute top-8 right-0 border bg-green-600  rounded-md w-fit p-1 m-1' onClick={addNote} >Add Note</button>
+                <div className="mt-4 mx-2">
+
+                    {notes.map(blog => (
+                        <div key={blog._id}  >
+
+                            <Note note={blog.description} />
+
+
+                        </div>
+                    ))}
+                </div>
+            </div>}
         </div>
     )
 }

@@ -38,14 +38,14 @@ export const authOptions = {
 
             if (user?.id) {
                 token.id = user.id
-                token.url = user.url
+
             }
 
             return token
         },
         async session({ session, token }) {
             session.user.id = token.id;
-            session.user.url = token.url;
+
             return session;
         }
     }
