@@ -4,6 +4,10 @@ import { Button } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Note from "./note";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Modal from 'react-modal'
+import AddTodo from "../components/addTodo"
+import { faPenToSquare, faTrashCan, faXmark } from "@fortawesome/free-solid-svg-icons";
 
 
 
@@ -28,7 +32,7 @@ export default function addTodo({ task, id, onSubmit }) {
 
             const url = `/api/note/?id=${id}`
             const res = await fetch(url, { cache: "no-cache" });
-            if (res) { setNotes(await res.json()); }
+            await res.json().then((res) => { setNotes(res); })
 
 
         }
@@ -167,6 +171,7 @@ export default function addTodo({ task, id, onSubmit }) {
 
     };
     const addNote = async () => {
+        setErrorNote("")
         if (!note) {
             setErrorNote("Enter a note first")
             return
@@ -184,13 +189,14 @@ export default function addTodo({ task, id, onSubmit }) {
             }),
         });
         console.log(createdNote)
+        setNote("")
     }
 
 
     return (
         <div className="">
 
-            <div className="min-w-full   bg-white ">
+            <div className="min-w-full max-h-screen   bg-white ">
 
                 <div className="flex  flex-col   lg:px-8">
                     <div >
@@ -243,7 +249,7 @@ export default function addTodo({ task, id, onSubmit }) {
                         <div className=" my-2" >
 
                             <label className="block text-lg font-medium leading-6 text-gray-900" >Expiry:</label>
-                            <input type="date" value={expiry} onChange={(e) => { setExpiry(Math.ceil(((new Date(e.target.value) - new Date()) / (24 * 60 * 60 * 1000)))) }} className=" rounded-md border border-gray-400 py-1.5 text-gray-900 focus:ring-2 focus:ring-inset sm:max-w-xs sm:text-sm sm:leading-6 " ></input>
+                            <input type="date" value={"2020-12-12"} onChange={(e) => { setExpiry(Math.ceil(((new Date(e.target.value) - new Date()) / (24 * 60 * 60 * 1000)))) }} className=" rounded-md border border-gray-400 py-1.5 text-gray-900 focus:ring-2 focus:ring-inset sm:max-w-xs sm:text-sm sm:leading-6 " ></input>
                         </div>
                         {error && <div className="bg-red-300 border border-red-600 rounded-md w-fit px-3">{error}</div>}
 
@@ -297,7 +303,7 @@ export default function addTodo({ task, id, onSubmit }) {
                     {notes.map(blog => (
                         <div key={blog._id}  >
 
-                            <Note note={blog.description} />
+                            <Note note={blog.description} id={blog._id} date={blog.createdAt} />
 
 
                         </div>

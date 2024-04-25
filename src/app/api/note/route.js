@@ -43,19 +43,37 @@ export async function GET(req, res) {
 
 }
 
+export async function PUT(req) {
+
+    // requesting data from front-end
+    const { description, id } = await req.json();
+    const newNote = {}
+
+    if (description) { newNote.description = description }
+
+    await connectToMongo()
+
+
+
+    let note = await Note.findByIdAndUpdate(id, { $set: newNote })
+    return NextResponse.json(note)
+
+
+
+
+}
+
 export async function DELETE(req) {
     // requesting data from the front-end
-    const todo = await req.json();
-    // storing todoId in the id var
-    const id = todo._id;
-    console.log(id)
+    const { id } = await req.json();
+
     // creating a db client
     await connectToMongo()
     try {
         if (id) {
-            console.log(id)
-            // deleting user based on its id
-            const res = await Todo.findByIdAndDelete(id);
+
+            // deleting note based on its id
+            const res = await Note.findByIdAndDelete(id);
             if (!res) {
                 return NextResponse.json({ "message": "Not Found" }, { status: 404 })
 

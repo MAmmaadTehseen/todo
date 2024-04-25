@@ -1,17 +1,16 @@
-
 "use client"
 
-import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Modal from 'react-modal'
 import AddTodo from "../components/addTodo"
 import { faPenToSquare, faTrashCan, faXmark } from "@fortawesome/free-solid-svg-icons";
-import Message from "./message";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useSession } from "next-auth/react";
 
 export default function item({ title, description, date, status, priority, background, id, onSubmit, setmessage }) {
 
     const [isOpen, setIsOpen] = useState(false)
+
 
 
     let Deleted = () => setmessage("Deleted Todo Successfully")
@@ -54,9 +53,8 @@ export default function item({ title, description, date, status, priority, backg
             // backgroundColor: 'rgba(0, 0, 0, 0.7)'
             backgroundColor: "white",
             maxWidth: "fit-content",
-            maxHeight: "fit-content",
-            display: "",
-            top: "15px",
+            MsOverflowStyle: "none", /* IE and Edge */
+            scrollbarWidth: " none",  /* Firefox */
             left: "40%",
             border: "3px solid blue",
             borderRadius: "30px"
