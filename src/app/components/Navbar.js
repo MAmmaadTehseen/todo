@@ -2,14 +2,8 @@
 import Image from "next/image";
 import { signOut, useSession } from "next-auth/react";
 import { AvatarComponent } from 'avatar-initials';
-// import { Button } from "@nextui-org/button";
 import { useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
-
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Button } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 
 
@@ -24,13 +18,7 @@ export default function navbar() {
     const [loading, setloading] = useState(false)
     const [profileLoading, setProfileloading] = useState(false)
     const [dashboardLoading, setDashboardloading] = useState(false)
-
-
-    const handleSubmit = () => {
-        setIsOpen(false);
-
-    };
-
+    const router = useRouter()
 
     useEffect(() => {
         let name = (session?.user?.name)
@@ -39,9 +27,12 @@ export default function navbar() {
 
             const url = `/api/singleUser/?id=${session?.user?.id}`
             const res = await fetch(url, { cache: "no-cache" });
-            setUser(await res.json());
+            if (res.ok) {
+
+                setUser(await res.json());
 
 
+            }
         }
 
         if (session) {
@@ -61,23 +52,30 @@ export default function navbar() {
 
 
 
-    const router = useRouter()
     const handleProfile = () => {
-        setumenu("")
+        setumenu("hidden")
         router.replace("profile")
 
     }
     const handleDashboard = () => {
-        setumenu("")
+        setumenu("hidden")
         router.replace("dashboard")
 
     }
+    const handleUmenu = () => {
+
+        umenu == "hidden" ? setumenu("") : setumenu("hidden");
+    }
+
 
 
 
     return (
         <nav className="flex bg-blue-500 text-cyan-50 justify-between fixed left-0 right-0 top-0 ">
-            <p className="flex text-5xl p-3 ">Todo</p>
+            <button onClick={() => router.replace("dashboard")}>
+
+                <p className="flex text-5xl p-3 ">Todo</p>
+            </button>
             <div className="flex "> </div>
             <div className="flex ">
 
@@ -86,7 +84,7 @@ export default function navbar() {
 
                         <div className="relative ">
                             <div>
-                                <button type="button" onClick={() => umenu == "hidden" ? setumenu("") : setumenu("hidden")} className="m-3 relative flex rounded-full bg-blue-500 text-sm focus:outline-none " >
+                                <button type="button" onClick={handleUmenu} className="m-3 relative flex rounded-full bg-blue-500 text-sm focus:outline-none " >
                                     <span className="absolute -inset-1.5"></span>
                                     <span className="sr-only">Open user menu</span>
                                     <div className=" flex justify-center">

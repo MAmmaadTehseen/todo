@@ -18,6 +18,7 @@ export default function addTodo({ task, id, onSubmit }) {
     const [expiry, setExpiry] = useState()
     const [date, setDate] = useState(`${new Date().getYear()}-${new Date().getMonth()}-${new Date().getDate()}`)
     const [loading, setLoading] = useState(false)
+    const [noteLoading, setNoteLoading] = useState(false)
     const [disable, setDisable] = useState(false)
     const [errorNote, setErrorNote] = useState("")
     const [error, setError] = useState("")
@@ -76,17 +77,14 @@ export default function addTodo({ task, id, onSubmit }) {
                     setDescription(res.description)
                     setStatus(res.status)
                     setPriority(res.priority)
-
                     var tomorrow = new Date();
                     tomorrow.setDate(tomorrow.getDate() + res.expiry);
-
                     let day = tomorrow.getDate()
                     let month = tomorrow.getMonth() + 1
                     let year = tomorrow.getYear() + 1900
                     setDate(`${year}-${month < 10 ? "0" + month : month}-${day < 9 ? "0" + day : day}`)
-                    // console.log(tomorrow)
-                    // console.log(tomorrow.toDateString())
-                    // console.log(res.expiry)
+                    setExpiry(res.expiry)
+
                     console.log(expiry)
                     if (!res) {
                         setError("loading failed")
@@ -187,20 +185,17 @@ export default function addTodo({ task, id, onSubmit }) {
 
     };
     const handleDate = (e) => {
-        (e) => { setExpiry(Math.ceil(((new Date(e.target.value) - new Date()) / (24 * 60 * 60 * 1000)))) }
-        var tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate());
-        console.log("e", tomorrow)
+        setExpiry(Math.ceil(((new Date(e.target.value) - new Date()) / (24 * 60 * 60 * 1000))))
+        console.log(expiry)
 
-        let day = tomorrow.getDate()
-        let month = tomorrow.getMonth() + 1
-        let year = tomorrow.getYear() + 1900
-        setDate(`${year}-${month < 10 ? "0" + month : month}-${day < 9 ? "0" + day : day}`)
+        setDate(e.target.value)
 
     }
     const addNote = async () => {
+        setNoteLoading(true)
         setErrorNote("")
         if (!note) {
+            setNoteLoading(false)
             setErrorNote("Enter a note first")
             return
         }
@@ -218,13 +213,14 @@ export default function addTodo({ task, id, onSubmit }) {
         });
         console.log(createdNote)
         setNote("")
+        setNoteLoading(false)
     }
 
 
     return (
-        <div className="">
+        <div>
 
-            <div className="min-w-full max-h-screen   bg-white ">
+            <div className="min-w-full max-h-fit   bg-white ">
 
                 <div className="flex  flex-col   lg:px-8">
                     <div >
@@ -234,13 +230,13 @@ export default function addTodo({ task, id, onSubmit }) {
                     <div className="mt-10 sm:mx-auto  sm:max-w-sm">
 
                         <div>
-                            <label className="block text-lg font-medium leading-6 text-gray-900">Title</label>
+                            <label className="block text-lg font-medium  text-gray-900">Title</label>
                             <div className="my-2">
                                 <input value={title} onChange={(e) => { setTitle(e.target.value) }} className="w-full rounded-md border border-gray-400 py-1.5 text-gray-900 " placeholder=" Title" />
                             </div>
                         </div>
                         <div>
-                            <label className="block text-lg font-medium leading-6 text-gray-900">Description</label>
+                            <label className="block text-lg font-medium  text-gray-900">Description</label>
                             <div className="my-2">
                                 <textarea value={description} onChange={(e) => { setDescription(e.target.value) }} rows="3" className="w-full rounded-md border border-gray-400 py-1.5 text-gray-900 " placeholder=" Add a brief description of your task"></textarea>
                             </div>
@@ -250,7 +246,7 @@ export default function addTodo({ task, id, onSubmit }) {
                         <div className="flex justify-around">
                             <div className="my-2">
 
-                                <label className=" my-2 block  text-lg font-medium leading-6 text-gray-900">Status</label>
+                                <label className=" mb-2 block  text-lg font-medium leading-6 text-gray-900">Status</label>
 
                                 <select value={status} onChange={(e) => { setStatus(e.target.value) }} className=" w-full rounded-md border border-gray-400 py-1.5 text-gray-900 ">
                                     <option disabled selected> -- select an option -- </option>
@@ -262,7 +258,7 @@ export default function addTodo({ task, id, onSubmit }) {
                             </div>
                             <div className="m-2">
 
-                                <label forhtml="country" className="block my-2 text-lg font-medium leading-6 text-gray-900">Priority</label>
+                                <label forhtml="country" className="block mb-2 text-lg font-medium leading-6 text-gray-900">Priority</label>
 
                                 <select value={priority} onChange={(e) => { setPriority(e.target.value) }} className="w-full rounded-md border border-gray-400 py-1.5 text-gray-900 ">
                                     <option disabled selected value> -- select an option -- </option>
@@ -277,7 +273,7 @@ export default function addTodo({ task, id, onSubmit }) {
                         <div className=" my-2" >
 
                             <label className="block text-lg font-medium leading-6 text-gray-900" >Expiry:</label>
-                            <input type="date" onChange={(e) => { setExpiry(Math.ceil(((new Date(e.target.value) - new Date()) / (24 * 60 * 60 * 1000)))) }} className=" rounded-md border border-gray-400 py-1.5 text-gray-900 focus:ring-2 focus:ring-inset sm:max-w-xs sm:text-sm sm:leading-6 " ></input>
+                            <input type="date" value={date} onChange={handleDate} className=" rounded-md border border-gray-400 py-1.5 text-gray-900 focus:ring-2 focus:ring-inset sm:max-w-xs sm:text-sm sm:leading-6 " ></input>
                         </div>
                         {error && <div className="bg-red-300 border border-red-600 rounded-md w-fit px-3">{error}</div>}
 
@@ -285,9 +281,10 @@ export default function addTodo({ task, id, onSubmit }) {
 
 
 
-                            <LoadingButton color="primary" variant="contained" onClick={createTodo} type="submit"
+                            <LoadingButton color={disable ? "secondary" : "primary"} variant="contained" onClick={createTodo} type="submit"
 
                                 loading={loading}
+                                disabled={disable}
                             >{task}
                             </LoadingButton>
                         </div>
@@ -295,13 +292,13 @@ export default function addTodo({ task, id, onSubmit }) {
                     </div>
                 </div>
             </div>
-            <div className='flex'>
+            <div className=' w-full'>
                 {notes && <div className="border-t-4 border-dotted border-gray-600 m-2">
 
                     <h1 className="inline font-bold text-pretty border-b-4 border-double border-stone-600 text-lg">Notes</h1>
                     <div className="flex justify-around my-2 w-full">
                         <textarea rows={1} value={note} onChange={(e) => { setNote(e.target.value) }} className=" rounded-md border border-gray-400 py-1.5 text-gray-900 " placeholder=" Add your Note" />
-                        <Button color="success" variant="contained" onClick={addNote} className='ml-5' >Add Note</Button>
+                        <LoadingButton loading={noteLoading} color="success" variant="contained" onClick={addNote} className='ml-5' >Add Note</LoadingButton>
                     </div>
                     {errorNote && <div className="bg-red-300 border border-red-600 rounded-md w-fit mt-1    px-3">{errorNote}</div>}
                     <div className="mt-4 mx-2">

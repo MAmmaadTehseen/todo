@@ -52,6 +52,7 @@ export default function item({ title, description, date, status, priority, backg
             // backgroundColor: 'rgba(0, 0, 0, 0.7)'
             backgroundColor: "white",
             maxWidth: "fit-content",
+            height: "fit-content",
             MsOverflowStyle: "none", /* IE and Edge */
             scrollbarWidth: " none",  /* Firefox */
             left: "40%",
@@ -67,7 +68,7 @@ export default function item({ title, description, date, status, priority, backg
             {/* <Message message={message} onClose={closeMessage} /> */}
             <div className="ml-2 w-10"><strong>{title.length <= 12 ? title : title.slice(0, 12) + "..."}</strong></div>
             <div className="col-span-3 ">{description.length < 40 ? description : description.slice(0, 40) + "...."}</div>
-            <div className="">{date} days remaining</div>
+            <div className="">{status != `Done` ? `${date} days remaining` : `Completed`}</div>
             <div className={`border rounded-lg text-center h-7 w-20   ${status == 'Active' ? "bg-green-600" : status == 'Done' ? "bg-blue-600" : "bg-gray-600"} `}>{status}</div>
             <div className={`${priority == 'High' ? "bg-red-600" : priority == 'Low' ? "bg-yellow-600" : "bg-orange-600"} h-7 w-20 border rounded-lg text-center `}>{priority}</div>
 

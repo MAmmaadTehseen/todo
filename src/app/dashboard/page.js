@@ -43,7 +43,12 @@ export default function Home() {
 
             const url = `/api/todo/?id=${session?.user?.id}`
             const res = await fetch(url, { cache: "no-cache" });
-            setblogs(await res.json());
+            if (res.ok) {
+
+
+                setblogs(await res.json());
+            }
+
 
 
         }
@@ -67,8 +72,7 @@ export default function Home() {
             // backgroundColor: 'rgba(0, 0, 0, 0.7)'
             backgroundColor: "white",
             maxWidth: "fit-content",
-            minHeight: "fit-content",
-            display: "",
+            maxHeight: "fit-content",
             top: "25px",
             left: "40%",
             border: "3px solid blue",
