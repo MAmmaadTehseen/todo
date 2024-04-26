@@ -1,19 +1,21 @@
 "use client"
 import Modal from 'react-modal'
-import AddTodo from "../components/addTodo"
-import TodoItem from "../components/todoItem"
+import AddTodo from "../components/AddTodo"
+import TodoItem from "../components/TodoItem"
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
-import Message from '../components/message';
-
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import Message from '../components/Alert';
+import { Fab } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import Skeleton from '../components/Skeleton';
 export default function Home() {
     let bg = true
     const [isOpen, setIsOpen] = useState(false)
     const [message, setmessage] = useState("")
     const { data: session } = useSession()
-    const [blogs, setblogs] = useState([])
+    const [blogs, setblogs] = useState(false)
     const [loading, setLoading] = useState()
     const [showComponent, setShowComponent] = useState()
 
@@ -22,6 +24,7 @@ export default function Home() {
             closeMessage()
         }, 3000);
     }, [message])
+
     const handleSubmit = () => {
         setmessage("Added todo succesfully")
         setIsOpen(false);
@@ -64,7 +67,7 @@ export default function Home() {
             // backgroundColor: 'rgba(0, 0, 0, 0.7)'
             backgroundColor: "white",
             maxWidth: "fit-content",
-            maxHeight: "fit-content",
+            minHeight: "fit-content",
             display: "",
             top: "25px",
             left: "40%",
@@ -97,15 +100,17 @@ export default function Home() {
 
                         </div>
                     </div>
+                    {blogs && <Fab color="primary" aria-label="add" className='fixed right-20 bottom-20 ' onClick={() => setIsOpen(true)}>
+                        <AddIcon />
+                    </Fab>}
+                    {blogs && <div >
+
+                        <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)} style={customStyles}>
+                            <AddTodo task={"Create"} id={null} onSubmit={handleSubmit} />
+                            <button className='absolute top-5 right-5' onClick={() => setIsOpen(false)}><FontAwesomeIcon style={{ fontSize: "25px" }} icon={faXmark}></FontAwesomeIcon></button>
+                        </Modal>
 
 
-                    <button className='fixed right-20 bottom-20 border bg-green-600  rounded-full h-10 w-10' onClick={() => setIsOpen(true)}><FontAwesomeIcon style={{ fontSize: "25px" }} icon={faPlus}></FontAwesomeIcon></button>
-                    <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)} style={customStyles}>
-                        <AddTodo task={"Create"} id={null} onSubmit={handleSubmit} />
-                        <button className='absolute top-5 right-5' onClick={() => setIsOpen(false)}><FontAwesomeIcon style={{ fontSize: "25px" }} icon={faXmark}></FontAwesomeIcon></button>
-                    </Modal>
-
-                    <div className="">
 
                         {blogs.map(blog => (
                             <div key={blog._id}  >
@@ -115,7 +120,9 @@ export default function Home() {
 
                             </div>
                         ))}
-                    </div>
+                    </div>}
+                    {!blogs &&
+                        <Skeleton />}
 
 
                 </div>

@@ -2,10 +2,10 @@
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Modal from 'react-modal'
-import AddTodo from "../components/addTodo"
+import AddTodo from "./AddTodo"
 import { faPenToSquare, faTrashCan, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
-import { useSession } from "next-auth/react";
+
 
 export default function item({ title, description, date, status, priority, background, id, onSubmit, setmessage }) {
 
@@ -18,17 +18,16 @@ export default function item({ title, description, date, status, priority, backg
 
 
     const handleSubmit = () => {
+        setmessage("")
         setIsOpen(false);
         setmessage("Successfully updated Todo")
 
     };
 
-    const closeMessage = () => {
-        // setmessage("")
-    }
 
 
     const deleteTodo = async () => {
+        setmessage("")
         const resp = await fetch(`/api/todo`, {
             // Using method DELETE to delete data
             method: 'DELETE',

@@ -2,13 +2,15 @@
 import Image from "next/image";
 import { signOut, useSession } from "next-auth/react";
 import { AvatarComponent } from 'avatar-initials';
-import { Button } from "@nextui-org/button";
+// import { Button } from "@nextui-org/button";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Button } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 
 
 
@@ -113,94 +115,31 @@ export default function navbar() {
                             <div className={`absolute ${umenu} right-0 border border-gray-300 z-10 mt-2 w-28 origin-top-right rounded-md bg-white  shadow-lg ring-1 ring-black ring-opacity-5 `} >
 
                                 <div>
-                                    <Button onClick={handleDashboard} type="submit" className="block px-3 py-2 text-sm text-gray-700"
-                                        isLoading={dashboardLoading}
-                                        spinner={
-                                            <svg
-                                                className="animate-spin h-5 w-5 text-current"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <circle
-                                                    className="opacity-25"
-                                                    cx="12"
-                                                    cy="12"
-                                                    r="10"
-                                                    stroke="currentColor"
-                                                    strokeWidth="4"
-                                                />
-                                                <path
-                                                    className="opacity-75"
-                                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                                    fill="currentColor"
-                                                />
-                                            </svg>
-                                        }
+                                    <LoadingButton onClick={handleDashboard} type="submit" className="block px-3 py-2 text-sm text-gray-700"
+                                        loading={dashboardLoading}
+
                                     >
-                                        {!dashboardLoading && <>Dashboard</>}
-                                    </Button>
+                                        Dashboard
+                                    </LoadingButton>
                                 </div>
                                 <hr />
                                 <div>
-                                    <Button onClick={handleProfile} type="submit" className="block px-3 py-2 text-sm text-gray-700"
-                                        isLoading={profileLoading}
-                                        spinner={
-                                            <svg
-                                                className="animate-spin h-5 w-5 text-current"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <circle
-                                                    className="opacity-25"
-                                                    cx="12"
-                                                    cy="12"
-                                                    r="10"
-                                                    stroke="currentColor"
-                                                    strokeWidth="4"
-                                                />
-                                                <path
-                                                    className="opacity-75"
-                                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                                    fill="currentColor"
-                                                />
-                                            </svg>
-                                        }
+                                    <LoadingButton onClick={handleProfile} type="submit" className="block px-3 py-2 text-sm text-gray-700"
+                                        loading={profileLoading}
+
                                     >
-                                        {!profileLoading && <>Profile</>}
-                                    </Button>
+                                        Profile
+                                    </LoadingButton>
                                 </div>
                                 <hr />
 
 
-                                <Button onClick={() => signout()} type="submit" className="block px-3 py-2 text-sm text-gray-700"
-                                    isLoading={loading}
-                                    spinner={
-                                        <svg
-                                            className="animate-spin h-5 w-5 text-current"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <circle
-                                                className="opacity-25"
-                                                cx="12"
-                                                cy="12"
-                                                r="10"
-                                                stroke="currentColor"
-                                                strokeWidth="4"
-                                            />
-                                            <path
-                                                className="opacity-75"
-                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                                fill="currentColor"
-                                            />
-                                        </svg>
-                                    }
+                                <LoadingButton onClick={() => signout()} type="submit" className="block px-3 py-2 text-sm text-gray-700"
+                                    loading={loading}
+
                                 >
-                                    {!loading && <>Sign Out</>}
-                                </Button>
+                                    Sign Out
+                                </LoadingButton>
                             </div>
                         </div>
                     </div>

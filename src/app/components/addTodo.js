@@ -1,13 +1,10 @@
 "use client"
-import { Button } from "@nextui-org/react";
-
+import { LoadingButton } from '@mui/lab';
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import Note from "./note";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Modal from 'react-modal'
-import AddTodo from "../components/addTodo"
-import { faPenToSquare, faTrashCan, faXmark } from "@fortawesome/free-solid-svg-icons";
+import Note from "./Note";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { Button } from '@mui/material';
 
 
 
@@ -19,6 +16,7 @@ export default function addTodo({ task, id, onSubmit }) {
     const [status, setStatus] = useState()
     const [priority, setPriority] = useState()
     const [expiry, setExpiry] = useState()
+    const [date, setDate] = useState(`${new Date().getYear()}-${new Date().getMonth()}-${new Date().getDate()}`)
     const [loading, setLoading] = useState(false)
     const [disable, setDisable] = useState(false)
     const [errorNote, setErrorNote] = useState("")
@@ -26,6 +24,11 @@ export default function addTodo({ task, id, onSubmit }) {
     const [notes, setNotes] = useState(null)
     const [note, setNote] = useState(null)
     let close = () => onSubmit()
+    useEffect(() => {
+        setTimeout(() => {
+            setError("")
+        }, 3000);
+    }, [error])
     useEffect(() => {
         async function fetchdata() {
 
@@ -45,7 +48,17 @@ export default function addTodo({ task, id, onSubmit }) {
     })
 
 
+    if (task === "Create") {
+        useEffect(() => {
+            var tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate());
 
+            let day = tomorrow.getDate()
+            let month = tomorrow.getMonth() + 1
+            let year = tomorrow.getYear() + 1900
+            setDate(`${year}-${month < 10 ? "0" + month : month}-${day < 9 ? "0" + day : day}`)
+        }, [])
+    }
     if (task === "Update") {
         useEffect(() => {
 
@@ -66,12 +79,15 @@ export default function addTodo({ task, id, onSubmit }) {
 
                     var tomorrow = new Date();
                     tomorrow.setDate(tomorrow.getDate() + res.expiry);
+
                     let day = tomorrow.getDate()
                     let month = tomorrow.getMonth() + 1
                     let year = tomorrow.getYear() + 1900
-                    console.log(`${year}-${month < 10 ? "0" + month : month}-${day < 9 ? "0" + day : day}`)
-                    console.log(tomorrow)
-                    setExpiry(`${year}-${month}-${day}`)
+                    setDate(`${year}-${month < 10 ? "0" + month : month}-${day < 9 ? "0" + day : day}`)
+                    // console.log(tomorrow)
+                    // console.log(tomorrow.toDateString())
+                    // console.log(res.expiry)
+                    console.log(expiry)
                     if (!res) {
                         setError("loading failed")
                     }
@@ -154,7 +170,7 @@ export default function addTodo({ task, id, onSubmit }) {
 
                     }),
                 });
-                console.log("updatedTodo.json()")
+                console.log(updatedTodo)
             }
 
 
@@ -170,6 +186,18 @@ export default function addTodo({ task, id, onSubmit }) {
 
 
     };
+    const handleDate = (e) => {
+        (e) => { setExpiry(Math.ceil(((new Date(e.target.value) - new Date()) / (24 * 60 * 60 * 1000)))) }
+        var tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate());
+        console.log("e", tomorrow)
+
+        let day = tomorrow.getDate()
+        let month = tomorrow.getMonth() + 1
+        let year = tomorrow.getYear() + 1900
+        setDate(`${year}-${month < 10 ? "0" + month : month}-${day < 9 ? "0" + day : day}`)
+
+    }
     const addNote = async () => {
         setErrorNote("")
         if (!note) {
@@ -249,7 +277,7 @@ export default function addTodo({ task, id, onSubmit }) {
                         <div className=" my-2" >
 
                             <label className="block text-lg font-medium leading-6 text-gray-900" >Expiry:</label>
-                            <input type="date" value={"2020-12-12"} onChange={(e) => { setExpiry(Math.ceil(((new Date(e.target.value) - new Date()) / (24 * 60 * 60 * 1000)))) }} className=" rounded-md border border-gray-400 py-1.5 text-gray-900 focus:ring-2 focus:ring-inset sm:max-w-xs sm:text-sm sm:leading-6 " ></input>
+                            <input type="date" onChange={(e) => { setExpiry(Math.ceil(((new Date(e.target.value) - new Date()) / (24 * 60 * 60 * 1000)))) }} className=" rounded-md border border-gray-400 py-1.5 text-gray-900 focus:ring-2 focus:ring-inset sm:max-w-xs sm:text-sm sm:leading-6 " ></input>
                         </div>
                         {error && <div className="bg-red-300 border border-red-600 rounded-md w-fit px-3">{error}</div>}
 
@@ -257,59 +285,38 @@ export default function addTodo({ task, id, onSubmit }) {
 
 
 
-                            <Button onClick={createTodo} type="submit" className="justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 "
-                                isLoading={loading}
-                                disabled={disable}
-                                spinner={
-                                    <svg
-                                        className="animate-spin h-5 w-5 text-current"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <circle
-                                            className="opacity-25"
-                                            cx="12"
-                                            cy="12"
-                                            r="10"
-                                            stroke="currentColor"
-                                            strokeWidth="4"
-                                        />
-                                        <path
-                                            className="opacity-75"
-                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                            fill="currentColor"
-                                        />
-                                    </svg>
-                                }
-                            >
-                                {!loading && task}
-                            </Button>
+                            <LoadingButton color="primary" variant="contained" onClick={createTodo} type="submit"
+
+                                loading={loading}
+                            >{task}
+                            </LoadingButton>
                         </div>
 
                     </div>
                 </div>
             </div>
-            {notes && <div className="relative border-t-4 border-dotted border-gray-600 m-2">
+            <div className='flex'>
+                {notes && <div className="border-t-4 border-dotted border-gray-600 m-2">
 
-                <h1 className="inline font-bold text-pretty border-b-4 border-double border-stone-600 text-lg">Notes</h1>
-                <div className="my-2">
-                    <textarea rows={1} value={note} onChange={(e) => { setNote(e.target.value) }} className=" rounded-md border border-gray-400 py-1.5 text-gray-900 " placeholder=" Add your Note" />
-                </div>
-                {errorNote && <div className="bg-red-300 border border-red-600 rounded-md w-fit mt-1    px-3">{errorNote}</div>}
-                <button className='absolute top-8 right-0 border bg-green-600  rounded-md w-fit p-1 m-1' onClick={addNote} >Add Note</button>
-                <div className="mt-4 mx-2">
+                    <h1 className="inline font-bold text-pretty border-b-4 border-double border-stone-600 text-lg">Notes</h1>
+                    <div className="flex justify-around my-2 w-full">
+                        <textarea rows={1} value={note} onChange={(e) => { setNote(e.target.value) }} className=" rounded-md border border-gray-400 py-1.5 text-gray-900 " placeholder=" Add your Note" />
+                        <Button color="success" variant="contained" onClick={addNote} className='ml-5' >Add Note</Button>
+                    </div>
+                    {errorNote && <div className="bg-red-300 border border-red-600 rounded-md w-fit mt-1    px-3">{errorNote}</div>}
+                    <div className="mt-4 mx-2">
 
-                    {notes.map(blog => (
-                        <div key={blog._id}  >
+                        {notes.map(blog => (
+                            <div key={blog._id}  >
 
-                            <Note note={blog.description} id={blog._id} date={blog.createdAt} />
+                                <Note note={blog.description} id={blog._id} date={blog.createdAt} />
 
 
-                        </div>
-                    ))}
-                </div>
-            </div>}
+                            </div>
+                        ))}
+                    </div>
+                </div>}
+            </div>
         </div>
     )
 }

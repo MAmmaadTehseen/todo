@@ -4,7 +4,8 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Button, ButtonGroup } from "@nextui-org/react";
+import { LoadingButton } from "@mui/lab";
+
 
 
 export default function create() {
@@ -16,6 +17,11 @@ export default function create() {
     const [password, setPassword] = useState("")
     const [password2, setPassword2] = useState("")
     const [error, setError] = useState("");
+    useEffect(() => {
+        setTimeout(() => {
+            setError("")
+        }, 3000);
+    }, [error])
 
     useEffect(() => {
         if (session) {
@@ -128,33 +134,17 @@ export default function create() {
                         </div>
                         <div>
 
-                            <Button onClick={createUser} type="submit" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                isLoading={register}
-                                spinner={
-                                    <svg
-                                        className="animate-spin h-5 w-5 text-current"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <circle
-                                            className="opacity-25"
-                                            cx="12"
-                                            cy="12"
-                                            r="10"
-                                            stroke="currentColor"
-                                            strokeWidth="4"
-                                        />
-                                        <path
-                                            className="opacity-75"
-                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                            fill="currentColor"
-                                        />
-                                    </svg>
-                                }
+                            <LoadingButton onClick={createUser}
+                                type="submit"
+                                className="bg-indigo-500"
+                                color="success"
+                                variant="contained"
+                                loading={register}
+
+
                             >
-                                {!register && <>Register</>}
-                            </Button>
+                                Register
+                            </LoadingButton>
                         </div>
                     </form>
 
