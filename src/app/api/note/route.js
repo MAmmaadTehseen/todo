@@ -31,7 +31,7 @@ export async function GET(req, res) {
         const todoId = await searchParams.get('id')
         await connectToMongo()
         // console.log("getting note")
-        const fetchTodo = await Note.find({ todoId: todoId });
+        const fetchTodo = await Note.find({ todoId: todoId }).sort({ createdAt: -1 });
         return NextResponse.json(fetchTodo)
     }
     catch (error) {

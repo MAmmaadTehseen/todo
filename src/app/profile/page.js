@@ -18,9 +18,7 @@ import { LoadingButton } from "@mui/lab";
 export default function profile() {
     const { data: session } = useSession()
 
-    const router = useRouter()
     const [loading, setLoading] = useState(false);
-    const [disable, setDisable] = useState(true);
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [url, setUrl] = useState("")
@@ -28,7 +26,7 @@ export default function profile() {
     const [newPassword, setNewPassword] = useState("")
     const [password2, setPassword2] = useState("")
     const [error, setError] = useState("");
-    const [initials, setinitials] = useState("AM")
+    const [initials, setInitials] = useState("AM")
     const [clicked, setClicked] = useState(false);
     const [isOpen, setIsOpen] = useState(false)
     const [user, setUser] = useState()
@@ -53,9 +51,8 @@ export default function profile() {
 
         if (session) {
             fetchdata()
-            setDisable(false)
             inint = inint.split(" ")
-            setinitials(`${inint[0][0]}${inint[1][0]}`)
+            setInitials(`${inint[0][0]}${inint[1][0]}`)
             console.log(name)
         }
 
@@ -67,7 +64,7 @@ export default function profile() {
 
             const url = `/api/singleUser/?id=${session?.user?.id}`
             const res = await fetch(url, { cache: "no-cache" });
-            setUser(await res.json());
+            if (res.ok) { setUser(await res.json()); }
 
 
         }
@@ -151,10 +148,10 @@ export default function profile() {
         content: {
             // backgroundColor: 'rgba(0, 0, 0, 0.7)'
             backgroundColor: "white",
-            maxWidth: "400px",
-            maxHeight: "250px",
+            width: "fit-content",
+            height: "fit-content",
             display: "",
-            top: "25px",
+            top: "30%",
             left: "40%",
             border: "3px solid blue",
             borderRadius: "30px"
@@ -181,35 +178,35 @@ export default function profile() {
                             <div className="flex  justify-center items-center sm:mx-auto sm:w-full sm:max-w-sm">
                                 <h2 className=" p-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Profile </h2>
                                 <div className="flex justify-center">
-
-                                    <div className="relative h-20 w-20 justify-center">
-                                        <AvatarComponent
-                                            classes="rounded-full"
-                                            useGravatar={false}
-                                            size={120}
-                                            // primarySource={user?.url}
-                                            color="#000000"
-                                            background="#BFCA98"
-                                            fontSize={60}
-
-
-                                            fontWeight={400}
-                                            offsetY={60}
-                                            initials={initials}
-                                        />
+                                    {user &&
+                                        <div className="relative h-20 w-20 justify-center">
+                                            <AvatarComponent
+                                                classes="rounded-full"
+                                                useGravatar={false}
+                                                size={120}
+                                                // primarySource={user?.url}
+                                                color="#000000"
+                                                background="#BFCA98"
+                                                fontSize={60}
 
 
-                                        {user?.url && <Image className="border rounded-full" src={user.url} fill={true} alt="profile photo" />}
+                                                fontWeight={400}
+                                                offsetY={60}
+                                                initials={initials}
+                                            />
 
-                                        <div>
-                                            <Button color="success" variant="contained" className="m-2" onClick={() => setIsOpen(true)}>Edit</Button>
-                                            <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)} style={customStyles}>
-                                                <GetImage onSubmit={handleSubmit} />
-                                                <button className='absolute top-5 right-5' onClick={() => setIsOpen(false)}><FontAwesomeIcon style={{ fontSize: "25px" }} icon={faXmark}></FontAwesomeIcon></button>
-                                            </Modal>
 
-                                        </div>
-                                    </div>
+                                            {user?.url && <Image className="border rounded-full" src={user.url} fill={true} alt="profile photo" />}
+
+                                            <div className="m-2">
+                                                <Button color="success" variant="contained" className="m-2" onClick={() => setIsOpen(true)}>Edit</Button>
+                                                <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)} style={customStyles}>
+                                                    <GetImage onSubmit={handleSubmit} />
+                                                    <button className='absolute top-5 right-5' onClick={() => setIsOpen(false)}><FontAwesomeIcon style={{ fontSize: "25px" }} icon={faXmark}></FontAwesomeIcon></button>
+                                                </Modal>
+
+                                            </div>
+                                        </div>}
 
                                 </div>
 
@@ -229,7 +226,7 @@ export default function profile() {
                                             <input readOnly value={email} onChange={(e) => { setEmail(e.target.value) }} required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                         </div>
                                     </div>
-                                    <LoadingButton color="success" variant="contained" onClick={changePassword}>Change Password</LoadingButton>
+                                    <LoadingButton size="small" color="success" variant="contained" onClick={changePassword}>Change Password</LoadingButton>
 
                                     {clicked && <div>
 
@@ -263,6 +260,7 @@ export default function profile() {
                                         </div>
                                     </div>}
 
+
                                     <div>
 
                                         <LoadingButton onClick={updateUser} color="success" variant="contained"
@@ -272,15 +270,16 @@ export default function profile() {
                                             Save Changes
                                         </LoadingButton>
                                     </div>
-                                    <div className="bg-green-300 border  rounded-md w-fit px-3">
+                                    {error && <div className="bg-red-300 border  rounded-md w-fit px-3">
                                         {error}
-                                    </div>
+                                    </div>}
+
                                 </form>
                             </div>
                         </div>
-                    </div>
+                    </div >
 
-                </div>
+                </div >
             }
 
 

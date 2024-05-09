@@ -10,13 +10,9 @@ const todoSchema = new Schema({
     },
     title: {
         type: String,
-        required: true,
-        unique: true,
-
     },
     description: {
         type: String,
-        required: true,
     },
 
     status: {
@@ -31,7 +27,13 @@ const todoSchema = new Schema({
         type: Number,
         default: 5,
     },
-});
+    isDeleted: {
+        type: Boolean,
+        default: false,
+    }
+},
+    { timestamps: true });
 
 const Todo = models.Todo || model('Todo', todoSchema);
+
 export default Todo;

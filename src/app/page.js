@@ -9,9 +9,14 @@ export default function page() {
   const { data: session } = useSession();
 
   return (
-    <>
-      <Signin />
-    </>
+    <div className="flex items-center justify-center h-screen">
+
+      <div className=" ">
+
+        <Signin />
+
+      </div>
+    </div>
   )
 
 

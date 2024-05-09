@@ -29,9 +29,12 @@ export async function GET(req, res) {
     try {
         const searchParams = req.nextUrl.searchParams
         const userId = await searchParams.get('id')
+        const limit = await searchParams.get('limit')
+        const page = await searchParams.get('page')
         await connectToMongo()
         // console.log("getting Todo")
-        const fetchTodo = await Todo.find({ userId: userId });
+        const fetchTodo = await Todo.find({ userId: userId, isDeleted: false }).limit(limit).sort({ createdAt: -1 }).skip((page) * limit);
+
         return NextResponse.json(fetchTodo)
     }
     catch (error) {
@@ -46,13 +49,14 @@ export async function GET(req, res) {
 export async function PUT(req) {
 
     // requesting data from front-end
-    const { title, description, status, priority, expiry, id } = await req.json();
+    const { title, description, status, priority, expiry, id, isDeleted } = await req.json();
     const newTodo = {}
     if (title) { newTodo.title = title }
     if (description) { newTodo.description = description }
     if (status) { newTodo.status = status }
     if (priority) { newTodo.priority = priority }
     if (expiry) { newTodo.expiry = expiry }
+    if (isDeleted) { newTodo.isDeleted = isDeleted }
     await connectToMongo()
 
 

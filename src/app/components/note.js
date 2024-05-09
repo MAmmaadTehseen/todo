@@ -1,14 +1,18 @@
 "use client"
-import { faPenToSquare, faTrashCan, faXmark } from '@fortawesome/free-solid-svg-icons'
+import { faL, faPenToSquare, faTrashCan, faXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { LoadingButton } from '@mui/lab'
 import React, { useState } from 'react'
 import Modal from 'react-modal'
+import DeleteNote from './Dialouge'
 
 export default function note({ note, id, date }) {
     const [openMain, setOpenMain] = useState(true)
     const [openUpdate, setOpenUpdate] = useState(false)
     const [note2, setNote2] = useState(note)
     const [focus, setfocus] = useState(note)
+    const [noteUpdate, setnoteUpdate] = useState(false)
+    const [isOpenDelete, setisOpenDelete] = useState(false)
 
     const deleteNote = async () => {
         const resp = await fetch(`/api/note`, {
@@ -18,7 +22,7 @@ export default function note({ note, id, date }) {
                 'id': id
             })
         })
-        console.log("delte")
+        console.log("delete")
     }
     const handleUpdate = () => {
         setOpenMain(false)
@@ -26,7 +30,7 @@ export default function note({ note, id, date }) {
     }
 
     const updateNote = async () => {
-
+        setnoteUpdate(true)
 
         const updatedNote = await fetch('/api/note', {
             method: 'PUT',
@@ -41,6 +45,7 @@ export default function note({ note, id, date }) {
             }),
         });
         setOpenMain(true)
+        setnoteUpdate(false)
         setOpenUpdate(false)
 
     }
@@ -75,9 +80,10 @@ export default function note({ note, id, date }) {
 
                     <div className="flex flex-row-reverse">
 
-                        <button className="mx-6  "  >
-                            <FontAwesomeIcon style={{ fontSize: "15px" }} onClick={deleteNote} icon={faTrashCan}></FontAwesomeIcon>
+                        <button className="mx-6  " onClick={() => setisOpenDelete(true)}  >
+                            <FontAwesomeIcon style={{ fontSize: "15px" }} icon={faTrashCan}></FontAwesomeIcon>
                         </button>
+                        {isOpenDelete && <DeleteNote id={id} task={"Note"} deleteTodo={deleteNote} Deleted={() => { }} isOpenDelete={isOpenDelete} setIsOpenDelete={setisOpenDelete} />}
 
                         <button onClick={handleUpdate}><FontAwesomeIcon style={{ fontSize: "15px" }} icon={faPenToSquare}></FontAwesomeIcon></button>
 
@@ -89,14 +95,18 @@ export default function note({ note, id, date }) {
 
 
                 </div>
-                <p className='text-center text-sm '>Created on :{date.slice(0, 10)}</p>
+                <div className='flex justify-around'>
+
+                    <p className='text-center text-sm '>Created on :{date.slice(0, 10)}    </p>
+                    {/* <p className='text-center text-sm '>At: {date.slice(-13, -5)}    </p> */}
+                </div>
             </div>}
             {openUpdate && <div className={` flex justify-between bg-green-300 border border-green-700 p-1 m-2`}>
                 <div className='flex w-40 '>
                     <input autoFocus={focus} className='bg-green-300 px-1' type='text' value={note2} onChange={(e) => { setNote2(e.target.value) }} />
                 </div>
 
-                <button className='bg-black border-gray-600 rounded-md text-green-50 m-1 p-1' onClick={updateNote}>Update</button>
+                <LoadingButton loading={noteUpdate} disabled={noteUpdate} color='secondary' variant="contained" className='  border-gray-600 rounded-md  text-green-50 m-1 p-1' onClick={updateNote}>Update</LoadingButton>
 
             </div>}
         </div>

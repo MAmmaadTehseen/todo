@@ -41,22 +41,7 @@ export default function skeleton() {
 
                 <Skeleton variant="rounded" height={60} />
             </div>
-            <div className='m-2'>
 
-                <Skeleton variant="rounded" height={60} />
-            </div>
-            <div className='m-2'>
-
-                <Skeleton variant="rounded" height={60} />
-            </div>
-            <div className='m-2'>
-
-                <Skeleton variant="rounded" height={60} />
-            </div>
-            <div className='m-2'>
-
-                <Skeleton variant="rounded" height={60} />
-            </div>
         </div>
     )
 }

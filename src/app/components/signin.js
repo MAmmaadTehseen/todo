@@ -19,7 +19,7 @@ export default function item() {
     if (session) {
 
 
-      const id = session?.user?.id
+
       const url = `dashboard`
 
       router.replace(url)
@@ -61,7 +61,7 @@ export default function item() {
 
   return (
 
-    <div className="flex justify-center">
+    <div className="flex justify-center align-middle ">
       <div className="flex  min-h-full shadow-2xl border border-gray-300 rounded-xl mt-5 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign in to your account</h2>

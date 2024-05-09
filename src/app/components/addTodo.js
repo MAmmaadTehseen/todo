@@ -3,8 +3,7 @@ import { LoadingButton } from '@mui/lab';
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Note from "./Note";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { Button } from '@mui/material';
+import { Backdrop, CircularProgress } from '@mui/material';
 
 
 
@@ -18,52 +17,51 @@ export default function addTodo({ task, id, onSubmit }) {
     const [expiry, setExpiry] = useState()
     const [date, setDate] = useState(`${new Date().getYear()}-${new Date().getMonth()}-${new Date().getDate()}`)
     const [loading, setLoading] = useState(false)
+    const [loadingData, setLoadingData] = useState(false)
     const [noteLoading, setNoteLoading] = useState(false)
+    const [loadingAdd, setLoadingAdd] = useState(false)
     const [disable, setDisable] = useState(false)
     const [errorNote, setErrorNote] = useState("")
     const [error, setError] = useState("")
-    const [notes, setNotes] = useState(null)
+    const [notes, setNotes] = useState()
     const [note, setNote] = useState(null)
+
     let close = () => onSubmit()
     useEffect(() => {
         setTimeout(() => {
             setError("")
         }, 3000);
     }, [error])
+
     useEffect(() => {
+
         async function fetchdata() {
 
-
             const url = `/api/note/?id=${id}`
-            const res = await fetch(url, { cache: "no-cache" });
-            await res.json().then((res) => { setNotes(res); })
+            const res = await fetch(url, { cache: "no-cache" })
 
-
+            await res.json().then((res) => setNotes(res))
         }
-
         if (task == "Update") {
             fetchdata()
-
+            notes ? setLoadingData(false) : setLoadingData(true)
+            console.log("notes", notes)
         }
+
+
+
+
 
     })
 
 
-    if (task === "Create") {
-        useEffect(() => {
-            var tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate());
 
-            let day = tomorrow.getDate()
-            let month = tomorrow.getMonth() + 1
-            let year = tomorrow.getYear() + 1900
-            setDate(`${year}-${month < 10 ? "0" + month : month}-${day < 9 ? "0" + day : day}`)
-        }, [])
-    }
+
     if (task === "Update") {
         useEffect(() => {
 
             setDisable(true)
+            setLoadingData(true)
             async function fetchdata() {
                 console.log("Update")
 
@@ -72,7 +70,7 @@ export default function addTodo({ task, id, onSubmit }) {
                 const res = await fetch(url, { cache: "no-cache" });
                 await res?.json().then((res) => {
                     setDisable(false)
-
+                    setLoadingData(false)
                     setTitle(res.title)
                     setDescription(res.description)
                     setStatus(res.status)
@@ -85,7 +83,6 @@ export default function addTodo({ task, id, onSubmit }) {
                     setDate(`${year}-${month < 10 ? "0" + month : month}-${day < 9 ? "0" + day : day}`)
                     setExpiry(res.expiry)
 
-                    console.log(expiry)
                     if (!res) {
                         setError("loading failed")
                     }
@@ -96,7 +93,6 @@ export default function addTodo({ task, id, onSubmit }) {
 
             }
             if (session) { fetchdata() }
-            console.log(expiry)
 
         }, [])
     }
@@ -135,7 +131,7 @@ export default function addTodo({ task, id, onSubmit }) {
 
         try {
             if (task === "Create") {
-                console.log("add")
+
                 const createdTodo = await fetch('/api/todo', {
                     method: 'POST',
                     headers: {
@@ -191,7 +187,10 @@ export default function addTodo({ task, id, onSubmit }) {
         setDate(e.target.value)
 
     }
+
+
     const addNote = async () => {
+        setLoadingAdd(true)
         setNoteLoading(true)
         setErrorNote("")
         if (!note) {
@@ -213,17 +212,26 @@ export default function addTodo({ task, id, onSubmit }) {
         });
         console.log(createdNote)
         setNote("")
+        setLoadingAdd(false)
         setNoteLoading(false)
     }
+
 
 
     return (
         <div>
 
-            <div className="min-w-full max-h-fit   bg-white ">
+
+            <div className="min-w-full    bg-white ">
 
                 <div className="flex  flex-col   lg:px-8">
                     <div >
+                        <Backdrop
+                            sx={{ color: 'blue', zIndex: (theme) => theme.zIndex.drawer + 10 }}
+                            open={loadingData}
+                        >
+                            <CircularProgress color="inherit" />
+                        </Backdrop>
                         <h2 className=" text-center text-2xl font-bold  text-gray-900">Todo</h2>
                     </div>
 
@@ -248,8 +256,8 @@ export default function addTodo({ task, id, onSubmit }) {
 
                                 <label className=" mb-2 block  text-lg font-medium leading-6 text-gray-900">Status</label>
 
-                                <select value={status} onChange={(e) => { setStatus(e.target.value) }} className=" w-full rounded-md border border-gray-400 py-1.5 text-gray-900 ">
-                                    <option disabled selected> -- select an option -- </option>
+                                <select value={status} onChange={(e) => { setStatus(e.target.value) }} className=" w-full rounded-md border border-gray-400 py-1.5 text-gray-900 bg-white ">
+                                    <option disabled selected > -- select an option -- </option>
                                     <option value="Active">Active</option>
                                     <option value="Pending">Pending</option>
                                     <option value="Done">Done</option>
@@ -260,7 +268,7 @@ export default function addTodo({ task, id, onSubmit }) {
 
                                 <label forhtml="country" className="block mb-2 text-lg font-medium leading-6 text-gray-900">Priority</label>
 
-                                <select value={priority} onChange={(e) => { setPriority(e.target.value) }} className="w-full rounded-md border border-gray-400 py-1.5 text-gray-900 ">
+                                <select value={priority} onChange={(e) => { setPriority(e.target.value) }} className="w-full rounded-md border border-gray-400 py-1.5 text-gray-900 bg-white ">
                                     <option disabled selected value> -- select an option -- </option>
                                     <option value="High">High</option>
                                     <option value="Medium">Medium</option>
@@ -293,22 +301,23 @@ export default function addTodo({ task, id, onSubmit }) {
                 </div>
             </div>
             <div className=' w-full'>
-                {notes && <div className="border-t-4 border-dotted border-gray-600 m-2">
-
+                {notes && <div className="relative border-t-4 border-dotted border-gray-600 m-2">
                     <h1 className="inline font-bold text-pretty border-b-4 border-double border-stone-600 text-lg">Notes</h1>
-                    <div className="flex justify-around my-2 w-full">
+                    <div className="my-2">
                         <textarea rows={1} value={note} onChange={(e) => { setNote(e.target.value) }} className=" rounded-md border border-gray-400 py-1.5 text-gray-900 " placeholder=" Add your Note" />
-                        <LoadingButton loading={noteLoading} color="success" variant="contained" onClick={addNote} className='ml-5' >Add Note</LoadingButton>
                     </div>
-                    {errorNote && <div className="bg-red-300 border border-red-600 rounded-md w-fit mt-1    px-3">{errorNote}</div>}
+                    {errorNote && <div className=" border border-red-600 rounded-md w-fit mt-1    px-3">{errorNote}</div>}
+                    <LoadingButton loading={loadingAdd} disabled={loadingAdd} color='primary' variant='contained' className='absolute top-8 right-0 border rounded-md w-fit p-1 m-1' onClick={addNote} >Add Note</LoadingButton>
                     <div className="mt-4 mx-2">
-
                         {notes.map(blog => (
                             <div key={blog._id}  >
 
-                                <Note note={blog.description} id={blog._id} date={blog.createdAt} />
 
 
+                                <div>
+                                    <Note note={blog.description} date={blog.createdAt} id={blog._id} />
+
+                                </div>
                             </div>
                         ))}
                     </div>
