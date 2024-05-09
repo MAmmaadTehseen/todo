@@ -82,9 +82,7 @@ export default function item({ data, setMessage, id }) {
 
 
     return (
-        <Table dataSource={data} pagination={{
-            position: ["none", "none"],
-        }} >
+        <Table dataSource={data} pagination={false} >
 
             <Column title="Title" dataIndex="title" key="title" render={(title) => (
                 <>
@@ -94,6 +92,11 @@ export default function item({ data, setMessage, id }) {
             <Column title="Description" dataIndex="description" key="description" render={(description) => (
                 <>
                     {description.length > 40 ? `${description.slice(0, 40)} ....` : description}
+                </>
+            )} />
+            <Column title="Expiry" dataIndex="expiry" key="expiry" render={(expiry) => (
+                <>
+                    {`${expiry} days remaing`}
                 </>
             )} />
             <Column

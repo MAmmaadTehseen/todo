@@ -44,6 +44,7 @@ export default function Home() {
                 setBlogs(await res.json());
                 const total = await fetch(`/api/count?id=${session.user.id} `, { cache: "no-cache" })
                 setCount(await total.json())
+
             }
 
 
@@ -140,7 +141,8 @@ export default function Home() {
 
 
                         {blogs &&
-                            <TodoItem data={blogs} setMessage={setMessage} />
+
+                            < TodoItem data={blogs} setMessage={setMessage} />
 
                         }
                     </div>}
