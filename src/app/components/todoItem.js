@@ -142,6 +142,7 @@ export default function item({ data, setMessage, id }) {
                         <button className="mx-1" onClick={() => { idUpdate(record._id) }}><FontAwesomeIcon style={{ fontSize: "25px" }} icon={faPenToSquare}></FontAwesomeIcon></button>
                         <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)} style={customStyles}>
                             <AddTodo task={"Update"} id={iid} onSubmit={handleSubmit} />
+                            <button className='absolute top-5 right-5' onClick={() => setIsOpen(false)}><FontAwesomeIcon style={{ fontSize: "25px" }} icon={faXmark}></FontAwesomeIcon></button>
 
                         </Modal>
 
