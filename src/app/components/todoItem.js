@@ -1,7 +1,7 @@
 "use client"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Modal from 'react-modal'
+import { Modal } from 'antd';
 import AddTodo from "./addTodo"
 import { faPenToSquare, faTrashCan, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
@@ -48,29 +48,10 @@ export default function item({ data, setMessage, id }) {
 
             }),
         });
-
+        setIsOpenDelete(false)
         console.log(deletedTodo.json())
     }
-    const customStyles = {
-        overlay: {
-            backgroundColor: 'rgba(0, 0, 0, 0.6)',
-            alignItems: "center"
-        },
-        content: {
-            // backgroundColor: 'rgba(0, 0, 0, 0.7)'
-            backgroundColor: "white",
-            maxWidth: "fit-content",
-            minHeight: "fit-content",
-            maxHeight: "screen",
-            // MsOverflowStyle: "none", /* IE and Edge */
-            // scrollbarWidth: " none",  /* Firefox */
-            left: "40%",
-            top: "10%",
-            border: "3px solid blue",
-            borderRadius: "30px"
 
-        }
-    }
     const idDelete = (iid) => {
         setIsOpenDelete(true)
         setId(iid)
@@ -82,7 +63,7 @@ export default function item({ data, setMessage, id }) {
 
 
     return (
-        <Table dataSource={data} pagination={false} >
+        <Table dataSource={data} pagination={false} className="z-5 " >
 
             <Column title="Title" dataIndex="title" key="title" render={(title) => (
                 <>
@@ -136,16 +117,16 @@ export default function item({ data, setMessage, id }) {
                 render={(_, record) => (
                     <div className="flex flex-row-reverse justify-around">
 
-                        <button className="mx-1" onClick={() => idDelete(record._id)}><FontAwesomeIcon style={{ fontSize: "25px" }} icon={faTrashCan}></FontAwesomeIcon></button>
+                        <button className="mx-1" onClick={() => { idDelete(record._id) }}><FontAwesomeIcon style={{ fontSize: "25px" }} icon={faTrashCan}></FontAwesomeIcon></button>
+                        <Modal open={isOpenDelete} onCancel={() => setIsOpenDelete(false)} mask={false} footer={false}  >
+                            <DeleteTodo task={"Todo"} id={iid} Deleted={Deleted} deleteTodo={deleteTodo} isOpenDelete={isOpenDelete} setIsOpenDelete={setIsOpenDelete} />
 
-                        {isOpenDelete && <DeleteTodo task={"Todo"} id={iid} Deleted={Deleted} deleteTodo={deleteTodo} isOpenDelete={isOpenDelete} setIsOpenDelete={setIsOpenDelete} />}
+                        </Modal>
 
-
-
-                        <button className="mx-1" onClick={() => idUpdate(record._id)}><FontAwesomeIcon style={{ fontSize: "25px" }} icon={faPenToSquare}></FontAwesomeIcon></button>
-                        <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)} style={customStyles}>
+                        <button className="mx-1" onClick={() => { idUpdate(record._id) }}><FontAwesomeIcon style={{ fontSize: "25px" }} icon={faPenToSquare}></FontAwesomeIcon></button>
+                        <Modal open={isOpen} onCancel={() => setIsOpen(false)} mask={false} footer={false}  >
                             <AddTodo task={"Update"} id={iid} onSubmit={handleSubmit} />
-                            <button className='absolute top-5 right-5' onClick={() => setIsOpen(false)}><FontAwesomeIcon style={{ fontSize: "25px" }} icon={faXmark}></FontAwesomeIcon></button>
+
                         </Modal>
 
 

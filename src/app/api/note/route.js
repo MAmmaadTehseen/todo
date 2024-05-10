@@ -1,4 +1,3 @@
-import connectToMongo from "@/app/lib/mongodb";
 import { NextResponse } from "next/server";
 import Note from "@/app/api/models/noteModel";
 
@@ -11,7 +10,6 @@ export async function POST(req) {
 
         let { description, todoId } = await req.json()
 
-        await connectToMongo()
         console.log("creating note")
         const createNote = await Note.create({ description, todoId })
         console.log("created note")
@@ -29,7 +27,6 @@ export async function GET(req, res) {
     try {
         const searchParams = req.nextUrl.searchParams
         const todoId = await searchParams.get('id')
-        await connectToMongo()
         // console.log("getting note")
         const fetchTodo = await Note.find({ todoId: todoId }).sort({ createdAt: -1 });
         return NextResponse.json(fetchTodo)
@@ -51,7 +48,6 @@ export async function PUT(req) {
 
     if (description) { newNote.description = description }
 
-    await connectToMongo()
 
 
 
@@ -68,7 +64,6 @@ export async function DELETE(req) {
     const { id } = await req.json();
 
     // creating a db client
-    await connectToMongo()
     try {
         if (id) {
 

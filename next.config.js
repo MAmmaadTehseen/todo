@@ -13,3 +13,10 @@ module.exports = {
         ],
     },
 }
+
+module.exports = {
+    experimental: {
+        instrumentationHook: true,
+    },
+}
+

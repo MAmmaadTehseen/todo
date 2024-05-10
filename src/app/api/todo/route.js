@@ -1,4 +1,4 @@
-import connectToMongo from "@/app/lib/mongodb";
+import dbConnect from "@/app/lib/mongodb";
 import { NextResponse } from "next/server";
 import Todo from "@/app/api/models/todoModel";
 
@@ -11,7 +11,6 @@ export async function POST(req) {
 
         let { title, description, status, priority, expiry, userId } = await req.json()
 
-        await connectToMongo()
         console.log("creating todo")
         const createTodo = await Todo.create({ userId, title, description, status, priority, expiry })
         console.log("created todo")
@@ -31,7 +30,7 @@ export async function GET(req, res) {
         const userId = await searchParams.get('id')
         const limit = await searchParams.get('limit')
         const page = await searchParams.get('page')
-        await connectToMongo()
+
         // console.log("getting Todo")
         const fetchTodo = await Todo.find({ userId: userId, isDeleted: false }).limit(limit).sort({ createdAt: -1 }).skip((page) * limit);
 
@@ -57,7 +56,6 @@ export async function PUT(req) {
     if (priority) { newTodo.priority = priority }
     if (expiry) { newTodo.expiry = expiry }
     if (isDeleted) { newTodo.isDeleted = isDeleted }
-    await connectToMongo()
 
 
 
@@ -76,7 +74,6 @@ export async function DELETE(req) {
     const id = todo._id;
     console.log(id)
     // creating a db client
-    await connectToMongo()
     try {
         if (id) {
             console.log(id)

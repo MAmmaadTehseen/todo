@@ -16,6 +16,7 @@ import { PlusOutlined } from '@ant-design/icons';
 
 export default function Home() {
     let bg = true
+    const [reload, setreload] = useState(true)
     const [isOpen, setIsOpen] = useState(false)
     const [message, setMessage] = useState("")
     const { data: session } = useSession()
@@ -25,7 +26,7 @@ export default function Home() {
     const [loading, setLoading] = useState(true)
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-
+    // setreload(!reload)
     useEffect(() => {
         setTimeout(() => {
             closeMessage()
@@ -56,27 +57,31 @@ export default function Home() {
             setLoading(true)
         }
 
-    })
+    }, [reload, session, message])
 
     const handlePage = async (e, newPage) => {
 
         await setPage(newPage);
-        console.log(page)
+        setreload(!reload)
     };
     const handleChangeRowsPerPage = async (event) => {
         await setRowsPerPage(parseInt(event.target.value));
         await setPage(0);
+        setreload(!reload)
     };
 
     const handleSubmit = () => {
         setLoading(!loading)
         setMessage("Added todo succesfully")
         setIsOpen(false);
+        setreload(!reload)
+        return
 
 
 
     };
     const closeMessage = () => {
+        setreload(!reload)
         setMessage("")
     }
 
@@ -142,11 +147,11 @@ export default function Home() {
 
                         {blogs &&
 
-                            < TodoItem data={blogs} setMessage={setMessage} />
+                            < TodoItem data={blogs} setMessage={setMessage} className="mb-5" />
 
                         }
                     </div>}
-                    {blogs && <div className='fixed  bottom-0 left-0 right-0 bg-white -z-50'>
+                    {blogs && <div className='fixed  bottom-0 left-0 right-0 bg-white z-50'>
                         <div className='flex justify-center'>
                             <TablePagination
                                 component="div"
@@ -155,7 +160,7 @@ export default function Home() {
                                 onPageChange={handlePage}
                                 rowsPerPage={rowsPerPage}
                                 onRowsPerPageChange={handleChangeRowsPerPage}
-                                rowsPerPageOptions={[5, 8, 10]}
+                                rowsPerPageOptions={[5, 10, 20, 50, 100]}
                             />
                         </div>
                     </div>}

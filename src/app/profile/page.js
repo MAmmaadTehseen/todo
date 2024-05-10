@@ -37,16 +37,16 @@ export default function profile() {
     }, [error])
     const handleSubmit = () => {
         setIsOpen(false);
+        setError("Image updated")
 
     };
     useEffect(() => {
         let inint = (session?.user?.name)
         async function fetchdata() {
-            setEmail(session?.user?.email)
-            setName(session?.user?.name)
-            setUrl(session?.user?.url)
 
-
+            setEmail(user?.email)
+            setName(user?.name)
+            setUrl(user?.url)
         }
 
         if (session) {
@@ -56,7 +56,7 @@ export default function profile() {
             console.log(name)
         }
 
-    }, [session])
+    }, [user])
     useEffect(() => {
 
         async function fetchdata() {
@@ -67,20 +67,19 @@ export default function profile() {
             if (res.ok) { setUser(await res.json()); }
 
 
+
         }
         if (session) {
             fetchdata()
 
         }
 
-    })
+    }, [session, error])
+
     const updateUser = async () => {
 
         setError()
-        // if (url == "") {
-        //     setError("Please Select an image first")
-        //     return
-        // }
+
         if (name.split(" ").length < 2) {
             setError("please enter last and first name")
             return
@@ -161,7 +160,7 @@ export default function profile() {
 
     return (
         <>
-            {session &&
+            {user &&
                 <div>
 
                     <div className="flex flex-row justify-center mt-20">
@@ -170,7 +169,7 @@ export default function profile() {
                         <h1 className="font-bold text-2xl">
                             Welcome
                         </h1>
-                        <h2 className="font-serif text-2xl text-blue-700"> {session.user.name}</h2>
+                        <h2 className="font-serif text-2xl text-blue-700"> {user.name}</h2>
 
                     </div>
                     <div className="flex justify-center">

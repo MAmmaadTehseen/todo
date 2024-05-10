@@ -28,29 +28,21 @@ export default function AlertDialogSlide({ isOpenDelete, setIsOpenDelete, delete
   };
 
   return (
-    <React.Fragment>
-      <div>
 
+    <div className='flex flex-col'>
+
+
+      <div className='m-3'>
+
+
+        Are you sure you want to delete that {task}?
+      </div>
+      <div className='flex justify-end'>
+
+        <Button color='success' variant="contained" onClick={handleDisagree} className='m-2'>Cancel</Button>
+        <LoadingButton loading={loading} color='error' variant="contained" onClick={handleAgree} className='m-2'>Delete</LoadingButton>
       </div>
 
-      <Dialog
-        open={isOpenDelete}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={handleDisagree}
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle>{"Confirmation"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            Are you sure you want to delete that {task}?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button color='success' variant="contained" onClick={handleDisagree}>Cancel</Button>
-          <LoadingButton loading={loading} color='error' variant="contained" onClick={handleAgree}>Delete</LoadingButton>
-        </DialogActions>
-      </Dialog>
-    </React.Fragment>
+    </div>
   );
 }

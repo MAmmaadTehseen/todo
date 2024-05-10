@@ -38,7 +38,7 @@ export default function navbar() {
 
         }
 
-    })
+    }, [session])
 
 
     const signout = () => {

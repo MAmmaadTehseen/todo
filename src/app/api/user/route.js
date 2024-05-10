@@ -1,4 +1,4 @@
-import connectToMongo from "@/app/lib/mongodb";
+import dbConnect from "../../lib/mongodb";
 import { NextResponse } from "next/server";
 import User from "@/app/api/models/userModel";
 import bcrypt from "bcrypt"
@@ -11,7 +11,6 @@ export async function POST(req) {
         const hash = await bcrypt.hash(password, salt)
 
 
-        await connectToMongo()
         const createUser = await User.create({ name, email, password: hash, url })
         console.log("CREATING USER")
         return NextResponse.json(createUser)
@@ -28,7 +27,6 @@ export async function POST(req) {
 export async function GET(req, res) {
 
     try {
-        await connectToMongo()
 
 
         const fetchUser = await User.find({});
@@ -53,7 +51,6 @@ export async function PUT(req) {
     if (email) { newUser.email = email }
     if (url) { newUser.url = url }
 
-    await connectToMongo()
     if (password) {
         newUser.password = password
 
@@ -71,7 +68,7 @@ export async function PUT(req) {
     }
 
 
-
+    await dbConnect()
     let todo = await User.findByIdAndUpdate(id, { $set: newUser })
     return NextResponse.json(todo, { status: 200 })
 
