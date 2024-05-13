@@ -8,7 +8,6 @@ export default function getImage({ onSubmit }) {
     const { data: session } = useSession()
     const [imageUrl, setImageUrl] = useState("")
     const [image, setImage] = useState("")
-    const [disable, setDisable] = useState(false)
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
 

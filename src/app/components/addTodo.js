@@ -10,11 +10,8 @@ import { Spin } from 'antd';
 export default function addTodo({ task, id, onSubmit }) {
     const { data: session } = useSession();
     const userId = session?.user?.id
-    const [title, setTitle] = useState("")
-    const [description, setDescription] = useState("")
-    const [status, setStatus] = useState()
-    const [priority, setPriority] = useState()
-    const [expiry, setExpiry] = useState()
+
+    const [todo, setTodo] = useState({})
     const [date, setDate] = useState(`${new Date().getYear()}-${new Date().getMonth()}-${new Date().getDate()}`)
     const [loading, setLoading] = useState(false)
     const [loadingData, setLoadingData] = useState(false)
@@ -26,7 +23,6 @@ export default function addTodo({ task, id, onSubmit }) {
     const [notes, setNotes] = useState([])
     const [note, setNote] = useState(null)
     const [reload, setreload] = useState(true)
-    const [done, setdone] = useState(true);
 
 
     let close = () => onSubmit()
@@ -57,15 +53,6 @@ export default function addTodo({ task, id, onSubmit }) {
 
     }, [noteLoading, id])
 
-    let ammad = () => {
-        if (done) {
-            console.log("ammad")
-            setdone(false)
-        }
-        () => console.log("ammad1234567890")
-
-    }
-    ammad()
 
 
     if (task === "Update") {
@@ -82,17 +69,18 @@ export default function addTodo({ task, id, onSubmit }) {
                 await res?.json().then((res) => {
                     setDisable(false)
                     setLoadingData(false)
-                    setTitle(res.title)
-                    setDescription(res.description)
-                    setStatus(res.status)
-                    setPriority(res.priority)
+                    // setTitle(res.title)
+                    // setDescription(res.description)
+                    // setStatus(res.status)
+                    // setPriority(res.priority)
+                    setTodo(res)
                     var tomorrow = new Date();
                     tomorrow.setDate(tomorrow.getDate() + res.expiry);
                     let day = tomorrow.getDate()
                     let month = tomorrow.getMonth() + 1
                     let year = tomorrow.getYear() + 1900
                     setDate(`${year}-${month < 10 ? "0" + month : month}-${day < 9 ? "0" + day : day}`)
-                    setExpiry(res.expiry)
+                    setTodo(todo => ({ ...todo, expiry: res.expiry }))
 
                     if (!res) {
                         setError("loading failed")
@@ -116,28 +104,28 @@ export default function addTodo({ task, id, onSubmit }) {
     const createTodo = async (e) => {
 
         e.preventDefault();
-        if (!title) {
+        if (!todo.title) {
             setError("Enter title")
             return
         }
-        else if (!description) {
+        else if (!todo.description) {
             setError("Enter description")
             return
         }
-        else if (!status) {
+        else if (!todo.status) {
             setError("Enter status")
             return
         }
-        else if (!priority) {
+        else if (!todo.priority) {
             setError("Enter priority")
             return
         }
-        else if (expiry <= 0) {
+        else if (todo.expiry <= 0) {
             setError("Previous date not Allowed")
             return
         }
 
-        else if (!expiry) {
+        else if (!todo.expiry) {
             setError("Select a date")
             return
         }
@@ -155,12 +143,12 @@ export default function addTodo({ task, id, onSubmit }) {
                     },
 
                     body: JSON.stringify({
-                        title,
-                        description,
-                        expiry,
-                        priority,
-                        status,
-                        userId,
+                        title: todo.title,
+                        description: todo.description,
+                        expiry: todo.expiry,
+                        priority: todo.priority,
+                        status: todo.status,
+                        userId: userId,
 
                     }),
                 });
@@ -176,11 +164,16 @@ export default function addTodo({ task, id, onSubmit }) {
 
                     body: JSON.stringify({
 
-                        title, description, status, priority, expiry, id,
+                        title: todo.title, description: todo.description, status: todo.status, priority: todo.priority, expiry: todo.expiry, id,
 
                     }),
                 });
                 console.log(updatedTodo)
+                if (updatedTodo.status == 500) {
+                    setError("cannot update")
+                    setLoading(false)
+                    return
+                }
             }
 
 
@@ -197,8 +190,8 @@ export default function addTodo({ task, id, onSubmit }) {
 
     };
     const handleDate = (e) => {
-        setExpiry(Math.ceil(((new Date(e.target.value) - new Date()) / (24 * 60 * 60 * 1000))))
-        console.log(expiry)
+        setTodo(todo => ({ ...todo, expiry: Math.ceil(((new Date(e.target.value) - new Date()) / (24 * 60 * 60 * 1000))) }))
+        console.log(todo.expiry)
 
         setDate(e.target.value)
 
@@ -252,13 +245,13 @@ export default function addTodo({ task, id, onSubmit }) {
                             <div>
                                 <label className="block text-lg font-medium  text-gray-900">Title</label>
                                 <div className="my-2">
-                                    <input value={title} onChange={(e) => { setTitle(e.target.value) }} className="w-full rounded-md border border-gray-400 py-1.5 text-gray-900 " placeholder=" Title" />
+                                    <input value={todo.title} onChange={(e) => { setTodo(todo => ({ ...todo, title: e.target.value })) }} className="w-full rounded-md border border-gray-400 py-1.5 text-gray-900 " placeholder=" Title" />
                                 </div>
                             </div>
                             <div>
                                 <label className="block text-lg font-medium  text-gray-900">Description</label>
                                 <div className="my-2">
-                                    <textarea value={description} onChange={(e) => { setDescription(e.target.value) }} rows="3" className="w-full rounded-md border border-gray-400 py-1.5 text-gray-900 " placeholder=" Add a brief description of your task"></textarea>
+                                    <textarea value={todo.description} onChange={(e) => { setTodo(todo => ({ ...todo, description: e.target.value })) }} rows="3" className="w-full rounded-md border border-gray-400 py-1.5 text-gray-900 " placeholder=" Add a brief description of your task"></textarea>
                                 </div>
                             </div>
 
@@ -268,7 +261,7 @@ export default function addTodo({ task, id, onSubmit }) {
 
                                     <label className=" mb-2 block  text-lg font-medium leading-6 text-gray-900">Status</label>
 
-                                    <select value={status} onChange={(e) => { setStatus(e.target.value) }} className=" w-full rounded-md border border-gray-400 py-1.5 text-gray-900 bg-white ">
+                                    <select value={todo.status} onChange={(e) => { setTodo(todo => ({ ...todo, status: e.target.value })) }} className=" w-full rounded-md border border-gray-400 py-1.5 text-gray-900 bg-white ">
                                         <option disabled selected > -- select an option -- </option>
                                         <option value="Active">Active</option>
                                         <option value="Pending">Pending</option>
@@ -280,7 +273,7 @@ export default function addTodo({ task, id, onSubmit }) {
 
                                     <label forhtml="country" className="block mb-2 text-lg font-medium leading-6 text-gray-900">Priority</label>
 
-                                    <select value={priority} onChange={(e) => { setPriority(e.target.value) }} className="w-full rounded-md border border-gray-400 py-1.5 text-gray-900 bg-white ">
+                                    <select value={todo.priority} onChange={(e) => { setTodo(todo => ({ ...todo, priority: e.target.value })) }} className="w-full rounded-md border border-gray-400 py-1.5 text-gray-900 bg-white ">
                                         <option disabled selected value> -- select an option -- </option>
                                         <option value="High">High</option>
                                         <option value="Medium">Medium</option>
