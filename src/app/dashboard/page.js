@@ -24,8 +24,10 @@ export default function Home() {
     const [page, setPage] = useState(0)
     const [count, setCount] = useState()
     const [loading, setLoading] = useState(true)
+    const [TableLoading, setTableLoading] = useState(false)
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
+    const [sortingElement, setsortingElement] = useState("createdAt")
+    const [sortingOrder, setsortingOrder] = useState("-1")
     // setreload(!reload)
     useEffect(() => {
         setTimeout(() => {
@@ -34,10 +36,11 @@ export default function Home() {
         }, 3000);
     }, [message])
     useEffect(() => {
+        setTableLoading(true)
         async function fetchdata() {
 
 
-            const url = `/api/todo/?id=${session?.user?.id}&limit=${rowsPerPage}&page=${page}`
+            const url = `/api/todo/?id=${session?.user?.id}&limit=${rowsPerPage}&page=${page}&sortingElement=${sortingElement}&sortingOrder=${sortingOrder}`
             const res = await fetch(url, { cache: "no-cache" });
             if (res.ok) {
 
@@ -45,6 +48,7 @@ export default function Home() {
                 setBlogs(await res.json());
                 const total = await fetch(`/api/count?id=${session.user.id} `, { cache: "no-cache" })
                 setCount(await total.json())
+                setTableLoading(false)
 
             }
 
@@ -57,7 +61,7 @@ export default function Home() {
             setLoading(true)
         }
 
-    }, [reload, session, message])
+    }, [reload, session, message, sortingOrder, sortingElement])
 
     const handlePage = async (e, newPage) => {
 
@@ -147,7 +151,7 @@ export default function Home() {
 
                         {blogs &&
 
-                            < TodoItem data={blogs} setMessage={setMessage} className="mb-5" />
+                            < TodoItem data={blogs} setMessage={setMessage} setsortingElement={setsortingElement} sortingOrder={sortingOrder} setsortingOrder={setsortingOrder} loading={TableLoading} className="mb-5" />
 
                         }
                     </div>}

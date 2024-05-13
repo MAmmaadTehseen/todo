@@ -3,7 +3,6 @@ import { LoadingButton } from '@mui/lab';
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Note from "./Note";
-import { Backdrop, CircularProgress } from '@mui/material';
 import { Spin } from 'antd';
 
 
@@ -27,6 +26,7 @@ export default function addTodo({ task, id, onSubmit }) {
     const [notes, setNotes] = useState([])
     const [note, setNote] = useState(null)
     const [reload, setreload] = useState(true)
+    const [done, setdone] = useState(true);
 
 
     let close = () => onSubmit()
@@ -55,16 +55,24 @@ export default function addTodo({ task, id, onSubmit }) {
 
 
 
-    }, [note, id])
+    }, [noteLoading, id])
 
+    let ammad = () => {
+        if (done) {
+            console.log("ammad")
+            setdone(false)
+        }
+        () => console.log("ammad1234567890")
 
+    }
+    ammad()
 
 
     if (task === "Update") {
         useEffect(() => {
-
             setDisable(true)
             setLoadingData(true)
+
             async function fetchdata() {
                 console.log("Update")
 
@@ -95,10 +103,15 @@ export default function addTodo({ task, id, onSubmit }) {
                 })
 
             }
-            if (session) { fetchdata() }
+
+            fetchdata()
+
+            console.log("data fetched")
+
 
         }, [id])
     }
+
 
     const createTodo = async (e) => {
 

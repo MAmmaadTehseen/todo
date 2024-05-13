@@ -10,7 +10,7 @@ import Modal from 'react-modal'
 const { Column } = Table;
 
 
-export default function item({ data, setMessage, id }) {
+export default function item({ data, setMessage, id, setsortingElement, setsortingOrder, loading }) {
 
     const [isOpen, setIsOpen] = useState(false)
     const [iid, setId] = useState(false)
@@ -77,11 +77,24 @@ export default function item({ data, setMessage, id }) {
 
         }
     }
+    const sort = (order) => {
+        if (order == "ascend") {
+            setsortingOrder(1)
+        }
+        else if (order == "descend") {
+            setsortingOrder(-1)
+
+        }
+        else {
+            setsortingOrder(1)
+            setsortingElement("createdAt")
+        }
+    }
 
     return (
-        <Table dataSource={data} pagination={false} className="z-5 "  >
+        <Table dataSource={data} pagination={false} className="z-5 " loading={loading}  >
 
-            <Column title="Title" dataIndex="title" key="title" render={(title) => (
+            <Column title="Title" dataIndex="title" key="title" sorter={(a, b, order = "abc") => { console.log(order); setsortingElement("title"); sort(order); }} render={(title) => (
                 <>
                     {title.length > 20 ? `${title.slice(0, 20)} ....` : title}
                 </>
@@ -91,7 +104,7 @@ export default function item({ data, setMessage, id }) {
                     {description.length > 40 ? `${description.slice(0, 40)} ....` : description}
                 </>
             )} />
-            <Column title="Expiry" dataIndex="expiry" key="expiry" render={(expiry) => (
+            <Column title="Expiry" dataIndex="expiry" key="expiry" sorter={(a, b, order) => { setsortingElement("expiry"); sort(order); }} render={(expiry) => (
                 <>
                     {`${expiry} days remaing`}
                 </>
@@ -100,6 +113,7 @@ export default function item({ data, setMessage, id }) {
                 title="Status"
                 dataIndex="status"
                 key="status"
+                sorter={(a, b, order) => { setsortingElement("status"); sort(order); }}
                 render={(status) => (
 
 
@@ -116,6 +130,7 @@ export default function item({ data, setMessage, id }) {
                 title="priority"
                 dataIndex="priority"
                 key="priority"
+                sorter={(a, b, order) => { setsortingElement("priority"); sort(order); }}
                 render={(priority) => (
 
                     <Tag color={priority == 'High' ? "red" : priority == 'Low' ? "yellow" : "orange"}>

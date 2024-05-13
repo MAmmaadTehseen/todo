@@ -30,9 +30,10 @@ export async function GET(req, res) {
         const userId = await searchParams.get('id')
         const limit = await searchParams.get('limit')
         const page = await searchParams.get('page')
-
-        // console.log("getting Todo")
-        const fetchTodo = await Todo.find({ userId: userId, isDeleted: false }).limit(limit).sort({ createdAt: -1 }).skip((page) * limit);
+        const sortingElement = await searchParams.get('sortingElement')
+        const sortingOrder = Number(await searchParams.get('sortingOrder'))
+        console.log(sortingOrder)
+        const fetchTodo = await Todo.find({ userId: userId, isDeleted: false }).sort({ [sortingElement]: sortingOrder }).limit(limit).skip((page) * limit);
 
         return NextResponse.json(fetchTodo)
     }

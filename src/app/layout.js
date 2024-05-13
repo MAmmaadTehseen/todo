@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import AuthProvider from "./provider";
+import dbConnect from "./lib/mongodb";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -10,7 +11,7 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-
+  dbConnect()
   return (
     <html lang="en">
       <body className={inter.className} >
