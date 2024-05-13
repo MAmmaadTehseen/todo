@@ -12,9 +12,10 @@ export default function create() {
     const { data: session } = useSession()
     const router = useRouter()
     const [register, setRegister] = useState(false);
-    const [name, setName] = useState("")
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
+    // const [name, setName] = useState("")
+    // const [email, setEmail] = useState("")
+    // const [password, setPassword] = useState("")
+    const [user, setuser] = useState({})
     const [password2, setPassword2] = useState("")
     const [error, setError] = useState("");
     useEffect(() => {
@@ -40,15 +41,15 @@ export default function create() {
     const createUser = async (e) => {
         setError()
         e.preventDefault();
-        if (name.split(" ").length < 2) {
+        if (user.name.split(" ").length < 2) {
             setError("please enter last and first name")
             return
         }
-        if (password !== password2) {
+        if (user.password !== password2) {
             setError("Password does not match")
             return
         }
-        if (password.length < 6) {
+        if (user.password.length < 6) {
             setError("password must be 6 digits")
             return
         }
@@ -63,9 +64,9 @@ export default function create() {
                 },
 
                 body: JSON.stringify({
-                    name,
-                    email,
-                    password,
+                    name: user.name,
+                    email: user.email,
+                    password: user.password,
 
                 }),
             });
@@ -73,13 +74,13 @@ export default function create() {
             console.log(error);
         }
         const res = await signIn("credentials", {
-            email,
-            password,
+            email: user.email,
+            password: user.password,
             redirect: false,
         })
         if (res.error) {
             console.log(res);
-            setError("Email already Exists")
+            setError("Error")
             setRegister(false)
             return
         }
@@ -103,13 +104,13 @@ export default function create() {
                             <div>
                                 <label className="block text-sm font-medium leading-6 text-gray-900">Full Name</label>
                                 <div className="mt-2">
-                                    <input value={name} onChange={(e) => { setName(e.target.value) }} required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                    <input value={user.name} onChange={(e) => { setuser(user => ({ ...user, name: e.target.value })) }} required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-graysetuser(user => ({ ...user, name: e.target.value }))-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                 </div>
                             </div>
                             <div>
                                 <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">Email address</label>
                                 <div className="mt-2">
-                                    <input value={email} onChange={(e) => { setEmail(e.target.value) }} type="email" autoComplete="email" required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                    <input value={user.email} onChange={(e) => { setuser(user => ({ ...user, email: e.target.value })) }} type="email" autoComplete="email" required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                 </div>
                             </div>
 
@@ -119,7 +120,7 @@ export default function create() {
 
                                 </div>
                                 <div className="mt-2">
-                                    <input value={password} onChange={(e) => { setPassword(e.target.value) }} type="password" autoComplete="current-password" required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                    <input value={user.password} onChange={(e) => { setuser(user => ({ ...user, password: e.target.value })) }} type="password" autoComplete="current-password" required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                 </div>
                             </div>
                             <div>

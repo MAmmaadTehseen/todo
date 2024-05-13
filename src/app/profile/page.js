@@ -19,9 +19,9 @@ export default function profile() {
     const { data: session } = useSession()
 
     const [loading, setLoading] = useState(false);
-    const [name, setName] = useState("")
-    const [email, setEmail] = useState("")
-    const [url, setUrl] = useState("")
+    // const [name, setName] = useState("")
+    // const [email, setEmail] = useState("")
+    // const [url, setUrl] = useState("")
     const [password, setPassword] = useState("")
     const [newPassword, setNewPassword] = useState("")
     const [password2, setPassword2] = useState("")
@@ -44,16 +44,16 @@ export default function profile() {
         let inint = (session?.user?.name)
         async function fetchdata() {
 
-            setEmail(user?.email)
-            setName(user?.name)
-            setUrl(user?.url)
+            // setEmail(user?.email)
+            // setUser(user => ({ ...user, name:user?.name }))
+            // setUrl(user?.url)
         }
 
         if (session) {
             fetchdata()
             inint = inint.split(" ")
             setInitials(`${inint[0][0]}${inint[1][0]}`)
-            console.log(name)
+
         }
 
     }, [user])
@@ -65,6 +65,7 @@ export default function profile() {
             const url = `/api/singleUser/?id=${session?.user?.id}`
             const res = await fetch(url, { cache: "no-cache" });
             if (res.ok) { setUser(await res.json()); }
+
 
 
 
@@ -80,7 +81,7 @@ export default function profile() {
 
         setError()
 
-        if (name.split(" ").length < 2) {
+        if (user.name.split(" ").length < 2) {
             setError("please enter last and first name")
             return
         }
@@ -110,9 +111,9 @@ export default function profile() {
             body: JSON.stringify({
 
                 id: session.user.id,
-                name,
-                email,
-                url,
+                name: user.name,
+                email: user.email,
+                url: user.url,
                 password: newPassword,
                 check: password,
 
@@ -216,13 +217,13 @@ export default function profile() {
                                     <div>
                                         <label className="block text-sm font-medium leading-6 text-gray-900">Name :</label>
                                         <div className="mt-2">
-                                            <input value={name} onChange={(e) => { setName(e.target.value) }} required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                            <input value={user.name} onChange={(e) => { setUser(user => ({ ...user, name: e.target.value })) }} required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                         </div>
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium leading-6 text-gray-900">Email address :</label>
                                         <div className="mt-2">
-                                            <input readOnly value={email} onChange={(e) => { setEmail(e.target.value) }} required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                            <input readOnly value={user.email} onChange={(e) => { setUser(user => ({ ...user, email: e.target.value })) }} required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                         </div>
                                     </div>
                                     <LoadingButton size="small" color="success" variant="contained" onClick={changePassword}>Change Password</LoadingButton>
@@ -230,10 +231,9 @@ export default function profile() {
                                     {clicked && <div>
 
                                         <div>
-                                            <div className="flex items-center justify-between">
-                                                <label className="block text-sm font-medium leading-6 text-gray-900">Current Password</label>
+                                            <label className="flex items-center justify-between">                                                <label className="block text-sm font-medium leading-6 text-gray-900">Current Password</label>
 
-                                            </div>
+                                            </label>
                                             <div className="mt-2">
                                                 <input value={password} onChange={(e) => { setPassword(e.target.value) }} type="password" autoComplete="new-password" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                             </div>

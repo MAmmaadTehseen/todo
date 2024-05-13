@@ -16,7 +16,7 @@ export async function POST(req) {
         return NextResponse.json(createUser)
     }
     catch (error) {
-        return NextResponse.json("error creating user")
+        return NextResponse.json(error)
 
     }
 
