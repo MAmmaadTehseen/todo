@@ -1,7 +1,7 @@
 "use client"
 import Modal from 'react-modal'
 import AddTodo from "../components/addTodo"
-import TodoItem from "../components/TodoItem"
+import TodoItem from "../components/todoItem"
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -36,7 +36,7 @@ export default function Home() {
         }, 3000);
     }, [message])
     useEffect(() => {
-        setTableLoading(true)
+
         async function fetchdata() {
 
 
@@ -45,9 +45,9 @@ export default function Home() {
             if (res.ok) {
 
 
-                setBlogs(await res.json());
                 const total = await fetch(`/api/count?id=${session.user.id} `, { cache: "no-cache" })
                 setCount(await total.json())
+                setBlogs(await res.json());
                 setTableLoading(false)
 
             }
@@ -58,34 +58,38 @@ export default function Home() {
 
         if (session) {
             fetchdata()
-            setLoading(true)
+
         }
 
-    }, [reload, session, message, sortingOrder, sortingElement])
+    }, [sortingOrder, sortingElement, page, loading])
 
     const handlePage = async (e, newPage) => {
 
         await setPage(newPage);
-        setreload(!reload)
+        setTableLoading(true)
+
+
+
     };
     const handleChangeRowsPerPage = async (event) => {
         await setRowsPerPage(parseInt(event.target.value));
         await setPage(0);
-        setreload(!reload)
+        setTableLoading(true)
+
+
     };
 
     const handleSubmit = () => {
-        setLoading(!loading)
         setMessage("Added todo succesfully")
         setIsOpen(false);
         setreload(!reload)
+        setTableLoading(true)
         return
 
 
 
     };
     const closeMessage = () => {
-        setreload(!reload)
         setMessage("")
     }
 
@@ -151,7 +155,7 @@ export default function Home() {
 
                         {blogs &&
 
-                            < TodoItem data={blogs} setMessage={setMessage} setsortingElement={setsortingElement} sortingOrder={sortingOrder} setsortingOrder={setsortingOrder} loading={TableLoading} className="mb-5" />
+                            < TodoItem data={blogs} setMessage={setMessage} setsortingElement={setsortingElement} sortingOrder={sortingOrder} setsortingOrder={setsortingOrder} loading={TableLoading} setLoading={setTableLoading} className="mb-5" />
 
                         }
                     </div>}

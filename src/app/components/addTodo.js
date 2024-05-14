@@ -8,8 +8,8 @@ import { Spin } from 'antd';
 
 
 export default function addTodo({ task, id, onSubmit }) {
-    const { data: session } = useSession();
-    const userId = session?.user?.id
+    // const { data: session } = useSession();
+    const userId = "663c5b655bab58af87ae776a"
 
     const [todo, setTodo] = useState({})
     const [date, setDate] = useState(`${new Date().getYear()}-${new Date().getMonth()}-${new Date().getDate()}`)
@@ -32,26 +32,26 @@ export default function addTodo({ task, id, onSubmit }) {
         }, 3000);
     }, [error])
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        async function fetchdata() {
+    //     async function fetchdata() {
 
-            const url = `/api/note/?id=${id}`
-            const res = await fetch(url, { cache: "no-cache" })
+    //         const url = `/api/note/?id=${id}`
+    //         const res = await fetch(url, { cache: "no-cache" })
 
-            await res.json().then((res) => setNotes(res))
-        }
-        if (task == "Update") {
-            fetchdata()
-            notes ? setLoadingData(false) : setLoadingData(true)
-            console.log("notes", notes)
-        }
-
-
+    //         await res.json().then((res) => setNotes(res))
+    //     }
+    //     if (task == "Update") {
+    //         fetchdata()
+    //         notes ? setLoadingData(false) : setLoadingData(true)
+    //         console.log("notes", notes)
+    //     }
 
 
 
-    }, [noteLoading, id])
+
+
+    // }, [noteLoading, id])
 
 
 
@@ -69,19 +69,17 @@ export default function addTodo({ task, id, onSubmit }) {
                 await res?.json().then((res) => {
                     setDisable(false)
                     setLoadingData(false)
-                    // setTitle(res.title)
-                    // setDescription(res.description)
-                    // setStatus(res.status)
-                    // setPriority(res.priority)
-                    setTodo(res)
+
+                    setTodo(res.todo)
+                    setNotes(res.note)
                     var tomorrow = new Date();
                     tomorrow.setDate(tomorrow.getDate() + res.expiry);
                     let day = tomorrow.getDate()
                     let month = tomorrow.getMonth() + 1
                     let year = tomorrow.getYear() + 1900
                     setDate(`${year}-${month < 10 ? "0" + month : month}-${day < 9 ? "0" + day : day}`)
-                    setTodo(todo => ({ ...todo, expiry: res.expiry }))
-
+                    setTodo(todo => ({ ...todo, expiry: res.todo.expiry }))
+                    console.log(notes)
                     if (!res) {
                         setError("loading failed")
                     }
@@ -97,7 +95,7 @@ export default function addTodo({ task, id, onSubmit }) {
             console.log("data fetched")
 
 
-        }, [id])
+        }, [id, noteLoading])
     }
 
 

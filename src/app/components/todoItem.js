@@ -19,6 +19,7 @@ export default function item({ data, setMessage, id, setsortingElement, setsorti
 
 
 
+
     let Deleted = () => setMessage("Deleted Todo Successfully")
 
 
@@ -80,6 +81,7 @@ export default function item({ data, setMessage, id, setsortingElement, setsorti
     const sort = (order) => {
         if (order == "ascend") {
             setsortingOrder(1)
+
         }
         else if (order == "descend") {
             setsortingOrder(-1)
