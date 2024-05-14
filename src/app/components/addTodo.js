@@ -8,10 +8,16 @@ import { Spin } from 'antd';
 
 
 export default function addTodo({ task, id, onSubmit }) {
-    // const { data: session } = useSession();
-    const userId = "663c5b655bab58af87ae776a"
+    const { data: session } = useSession();
+    const userId = session?.user?.id
 
-    const [todo, setTodo] = useState({})
+    const [todo, setTodo] = useState({
+        title: "",
+        description: "",
+        status: null,
+        priority: null,
+        expiry: 0,
+    })
     const [date, setDate] = useState(`${new Date().getYear()}-${new Date().getMonth()}-${new Date().getDate()}`)
     const [loading, setLoading] = useState(false)
     const [loadingData, setLoadingData] = useState(false)
@@ -20,7 +26,10 @@ export default function addTodo({ task, id, onSubmit }) {
     const [disable, setDisable] = useState(false)
     const [errorNote, setErrorNote] = useState("")
     const [error, setError] = useState("")
-    const [notes, setNotes] = useState([])
+    const [notes, setNotes] = useState({
+        description: "",
+        createdAt: ""
+    })
     const [note, setNote] = useState(null)
     const [reload, setreload] = useState(true)
 
@@ -32,71 +41,51 @@ export default function addTodo({ task, id, onSubmit }) {
         }, 3000);
     }, [error])
 
-    // useEffect(() => {
-
-    //     async function fetchdata() {
-
-    //         const url = `/api/note/?id=${id}`
-    //         const res = await fetch(url, { cache: "no-cache" })
-
-    //         await res.json().then((res) => setNotes(res))
-    //     }
-    //     if (task == "Update") {
-    //         fetchdata()
-    //         notes ? setLoadingData(false) : setLoadingData(true)
-    //         console.log("notes", notes)
-    //     }
 
 
+    async function fetchdata() {
+        console.log("Update")
 
 
+        const url = `/api/singleTodo/?id=${id}`
+        const res = await fetch(url, { cache: "no-cache" });
+        await res.json().then((res) => {
+            setDisable(false)
 
-    // }, [noteLoading, id])
+            setTodo(res.todo)
+            var tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + res.todo.expiry);
+            let day = tomorrow.getDate()
+            let month = tomorrow.getMonth() + 1
+            let year = tomorrow.getYear() + 1900
+            setDate(`${year}-${month < 10 ? "0" + month : month}-${day < 9 ? "0" + day : day}`)
+            console.log(tomorrow)
+            if (!res) {
+                setError("loading failed")
+            }
 
 
+            setNotes(res.note)
 
-    if (task === "Update") {
-        useEffect(() => {
+            setLoadingData(false)
+        })
+
+    }
+
+
+    useEffect(() => {
+
+        if (task === "Update") {
             setDisable(true)
             setLoadingData(true)
-
-            async function fetchdata() {
-                console.log("Update")
-
-
-                const url = `/api/singleTodo/?id=${id}`
-                const res = await fetch(url, { cache: "no-cache" });
-                await res?.json().then((res) => {
-                    setDisable(false)
-                    setLoadingData(false)
-
-                    setTodo(res.todo)
-                    setNotes(res.note)
-                    var tomorrow = new Date();
-                    tomorrow.setDate(tomorrow.getDate() + res.expiry);
-                    let day = tomorrow.getDate()
-                    let month = tomorrow.getMonth() + 1
-                    let year = tomorrow.getYear() + 1900
-                    setDate(`${year}-${month < 10 ? "0" + month : month}-${day < 9 ? "0" + day : day}`)
-                    setTodo(todo => ({ ...todo, expiry: res.todo.expiry }))
-                    console.log(notes)
-                    if (!res) {
-                        setError("loading failed")
-                    }
-
-
-
-                })
-
-            }
 
             fetchdata()
 
             console.log("data fetched")
+        }
 
 
-        }, [id, noteLoading])
-    }
+    }, [])
 
 
     const createTodo = async (e) => {
@@ -180,6 +169,7 @@ export default function addTodo({ task, id, onSubmit }) {
 
 
 
+            setLoading(false)
             close()
         } catch (error) {
             console.log(error);
@@ -221,17 +211,18 @@ export default function addTodo({ task, id, onSubmit }) {
         setNote("")
         setreload(!reload)
         setLoadingAdd(false)
+        fetchdata()
         setNoteLoading(false)
     }
 
 
 
     return (
-        <div>
+        <Spin spinning={loadingData}>
+            <div>
 
 
-            <Spin spinning={loadingData}>
-                <div className="min-w-full    bg-white ">
+                <div className="min-w-full     bg-white ">
 
                     <div className="flex  flex-col   lg:px-8">
                         <div >
@@ -304,29 +295,29 @@ export default function addTodo({ task, id, onSubmit }) {
                     </div>
                 </div>
                 <div className=' w-full'>
-                    {notes && <div className="relative border-t-4 border-dotted border-gray-600 m-2">
+                    {task == "Update" && <div className="relative border-t-4 border-dotted border-gray-600 m-2">
                         <h1 className="inline font-bold text-pretty border-b-4 border-double border-stone-600 text-lg">Notes</h1>
                         <div className="my-2">
                             <textarea rows={1} value={note} onChange={(e) => { setNote(e.target.value) }} className=" rounded-md border border-gray-400 py-1.5 text-gray-900 " placeholder=" Add your Note" />
                         </div>
                         {errorNote && <div className=" border border-red-600 rounded-md w-fit mt-1    px-3">{errorNote}</div>}
                         <LoadingButton loading={loadingAdd} disabled={loadingAdd} color='primary' variant='contained' className='absolute top-8 right-0 border rounded-md w-fit p-1 m-1' onClick={addNote} >Add Note</LoadingButton>
-                        <div className="mt-4 mx-2">
+                        {!loading && notes?.description != "" && todo.description != "" && <div className="mt-4 mx-2">
                             {notes.map(blog => (
                                 <div key={blog._id}  >
 
 
 
                                     <div>
-                                        <Note note={blog.description} date={blog.createdAt} id={blog._id} />
+                                        <Note note={blog.description} date={blog.createdAt} id={blog._id} fetchdata={fetchdata} />
 
                                     </div>
                                 </div>
                             ))}
-                        </div>
+                        </div>}
                     </div>}
                 </div>
-            </Spin>
-        </div>
+            </div>
+        </Spin >
     )
 }

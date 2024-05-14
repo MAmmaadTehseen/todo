@@ -27,17 +27,16 @@ export default function AlertDialogSlide({ isOpenDelete, setIsOpenDelete, delete
     <div className='flex flex-col'>
 
 
-      <div className='m-3'>
-
+      <div>
 
         Are you sure you want to delete that {task}?
       </div>
-      <div className='flex justify-end'>
+      <div className='flex flex-row-reverse'>
 
-        <Button color='success' variant="contained" onClick={handleDisagree} className='m-2'>Cancel</Button>
-        <LoadingButton loading={loading} color='error' variant="contained" onClick={handleAgree} className='m-2'>Delete</LoadingButton>
+        <Button className='m-2' color='success' variant="contained" onClick={handleDisagree}>Cancel</Button>
+        <LoadingButton className='m-2' loading={loading} color='error' variant="contained" onClick={handleAgree}>Delete</LoadingButton>
       </div>
-
     </div>
+
   );
 }

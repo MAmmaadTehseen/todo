@@ -5,7 +5,7 @@ import { Schema, model, models } from "mongoose";
 const todoSchema = new Schema({
     todoId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'todo',
+        ref: 'todos',
 
     },
 

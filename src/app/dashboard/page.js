@@ -1,5 +1,4 @@
 "use client"
-import Modal from 'react-modal'
 import AddTodo from "../components/addTodo"
 import TodoItem from "../components/todoItem"
 import { useSession } from "next-auth/react";
@@ -10,7 +9,7 @@ import Message from '../components/Alert';
 import Skeleton from '../components/Skeleton';
 import * as React from 'react';
 import TablePagination from '@mui/material/TablePagination';
-import { FloatButton } from 'antd';
+import { FloatButton, Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
 
@@ -28,45 +27,56 @@ export default function Home() {
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [sortingElement, setsortingElement] = useState("createdAt")
     const [sortingOrder, setsortingOrder] = useState("-1")
-    // setreload(!reload)
     useEffect(() => {
-        setTimeout(() => {
-            closeMessage()
-            setLoading(!loading)
-        }, 3000);
-    }, [message])
-    useEffect(() => {
-
-        async function fetchdata() {
-
-
-            const url = `/api/todo/?id=${session?.user?.id}&limit=${rowsPerPage}&page=${page}&sortingElement=${sortingElement}&sortingOrder=${sortingOrder}`
-            const res = await fetch(url, { cache: "no-cache" });
-            if (res.ok) {
-
-
-                const total = await fetch(`/api/count?id=${session.user.id} `, { cache: "no-cache" })
-                setCount(await total.json())
-                setBlogs(await res.json());
-                setTableLoading(false)
-
-            }
-
-
-
-        }
-
         if (session) {
             fetchdata()
 
         }
 
-    }, [sortingOrder, sortingElement, page, loading])
+    }, [session])
+    useEffect(() => {
+        setTimeout(() => {
+            closeMessage()
+        }, 4000);
+    }, [message])
+    const closeMessage = () => {
+        setMessage("")
+    }
+    async function fetchdata() {
+
+
+        const url = `/api/todo/?id=${session?.user?.id}&limit=${rowsPerPage}&page=${page}&sortingElement=${sortingElement}&sortingOrder=${sortingOrder}`
+        const res = await fetch(url, { cache: "no-cache" });
+        if (res.ok) {
+
+
+            const total = await fetch(`/api/count?id=${session.user.id} `, { cache: "no-cache" })
+            setCount(await total.json())
+            setBlogs(await res.json());
+            setTableLoading(false)
+
+        }
+
+
+
+    }
+    useEffect(() => {
+
+
+
+        if (session) {
+            setTableLoading(true)
+            fetchdata()
+
+        }
+
+    }, [sortingOrder, sortingElement, page, rowsPerPage, loading])
 
     const handlePage = async (e, newPage) => {
 
         await setPage(newPage);
         setTableLoading(true)
+
 
 
 
@@ -77,21 +87,21 @@ export default function Home() {
         setTableLoading(true)
 
 
+
     };
 
     const handleSubmit = () => {
         setMessage("Added todo succesfully")
+        setTableLoading(true)
+        fetchdata()
         setIsOpen(false);
         setreload(!reload)
-        setTableLoading(true)
         return
 
 
 
     };
-    const closeMessage = () => {
-        setMessage("")
-    }
+
 
 
 
@@ -101,11 +111,11 @@ export default function Home() {
 
     const customStyles = {
         overlay: {
-            backgroundColor: 'rgba(0, 0, 0, 0.6)',
+            backgroundColor: 'rgba(0, 0, 0, 0.9)',
             alignItems: "center"
         },
         content: {
-            // backgroundColor: 'rgba(0, 0, 0, 0.7)'
+
             backgroundColor: "white",
             maxWidth: "fit-content",
             height: "fit-content",
@@ -145,9 +155,9 @@ export default function Home() {
 
 
                         </div>
-                        <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)} style={customStyles}>
+                        <Modal open={isOpen} onCancel={() => setIsOpen(false)} footer={null} >
                             <AddTodo task={"Create"} id={null} onSubmit={handleSubmit} />
-                            <button className='absolute top-5 right-5' onClick={() => setIsOpen(false)}><FontAwesomeIcon style={{ fontSize: "25px" }} icon={faXmark}></FontAwesomeIcon></button>
+
                         </Modal>
 
 
@@ -155,7 +165,7 @@ export default function Home() {
 
                         {blogs &&
 
-                            < TodoItem data={blogs} setMessage={setMessage} setsortingElement={setsortingElement} sortingOrder={sortingOrder} setsortingOrder={setsortingOrder} loading={TableLoading} setLoading={setTableLoading} className="mb-5" />
+                            < TodoItem data={blogs} setMessage={setMessage} setsortingElement={setsortingElement} sortingOrder={sortingOrder} setsortingOrder={setsortingOrder} loading={TableLoading} setLoading={setTableLoading} fetchdata={fetchdata} className="mb-5" />
 
                         }
                     </div>}

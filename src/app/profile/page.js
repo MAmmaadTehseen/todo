@@ -29,7 +29,11 @@ export default function profile() {
     const [initials, setInitials] = useState("AM")
     const [clicked, setClicked] = useState(false);
     const [isOpen, setIsOpen] = useState(false)
-    const [user, setUser] = useState()
+    const [user, setUser] = useState({
+        name: "",
+        email: "",
+        password: ""
+    })
     useEffect(() => {
         setTimeout(() => {
             setError("")

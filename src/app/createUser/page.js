@@ -15,7 +15,11 @@ export default function create() {
     // const [name, setName] = useState("")
     // const [email, setEmail] = useState("")
     // const [password, setPassword] = useState("")
-    const [user, setuser] = useState({})
+    const [user, setuser] = useState({
+        name: "",
+        email: "",
+        password: "",
+    })
     const [password2, setPassword2] = useState("")
     const [error, setError] = useState("");
     useEffect(() => {

@@ -3,10 +3,10 @@ import { faL, faPenToSquare, faTrashCan, faXmark } from '@fortawesome/free-solid
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { LoadingButton } from '@mui/lab'
 import React, { useState } from 'react'
-import Modal from 'react-modal'
 import DeleteNote from './Dialouge'
+import { Modal } from 'antd'
 
-export default function note({ note, id, date }) {
+export default function note({ note, id, date, fetchdata }) {
     const [openMain, setOpenMain] = useState(true)
     const [openUpdate, setOpenUpdate] = useState(false)
     const [note2, setNote2] = useState(note)
@@ -22,6 +22,7 @@ export default function note({ note, id, date }) {
                 'id': id
             })
         })
+        fetchdata()
         console.log("delete")
     }
     const handleUpdate = () => {
@@ -44,6 +45,7 @@ export default function note({ note, id, date }) {
 
             }),
         });
+        fetchdata()
         setOpenMain(true)
         setnoteUpdate(false)
         setOpenUpdate(false)
@@ -83,7 +85,11 @@ export default function note({ note, id, date }) {
                         <button className="mx-6  " onClick={() => setisOpenDelete(true)}  >
                             <FontAwesomeIcon style={{ fontSize: "15px" }} icon={faTrashCan}></FontAwesomeIcon>
                         </button>
-                        {isOpenDelete && <DeleteNote id={id} task={"Note"} deleteTodo={deleteNote} Deleted={() => { }} isOpenDelete={isOpenDelete} setIsOpenDelete={setisOpenDelete} />}
+
+                        <Modal centered open={isOpenDelete} onCancel={() => setIsOpen(false)} footer={null} maskClosable={false} mask={true}  >
+                            <DeleteNote id={id} task={"Note"} deleteTodo={deleteNote} Deleted={() => { }} isOpenDelete={isOpenDelete} setIsOpenDelete={setisOpenDelete} />
+                        </Modal>
+
 
                         <button onClick={handleUpdate}><FontAwesomeIcon style={{ fontSize: "15px" }} icon={faPenToSquare}></FontAwesomeIcon></button>
 
