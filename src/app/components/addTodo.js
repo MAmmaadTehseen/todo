@@ -44,7 +44,6 @@ export default function addTodo({ task, id, onSubmit }) {
 
 
     async function fetchdata() {
-        console.log("Update")
 
 
         const url = `/api/singleTodo/?id=${id}`
@@ -59,7 +58,6 @@ export default function addTodo({ task, id, onSubmit }) {
             let month = tomorrow.getMonth() + 1
             let year = tomorrow.getYear() + 1900
             setDate(`${year}-${month < 10 ? "0" + month : month}-${day < 9 ? "0" + day : day}`)
-            console.log(tomorrow)
             if (!res) {
                 setError("loading failed")
             }
@@ -81,7 +79,6 @@ export default function addTodo({ task, id, onSubmit }) {
 
             fetchdata()
 
-            console.log("data fetched")
         }
 
 
@@ -155,7 +152,6 @@ export default function addTodo({ task, id, onSubmit }) {
 
                     }),
                 });
-                console.log(updatedTodo)
                 if (updatedTodo.status == 500) {
                     setError("cannot update")
                     setLoading(false)
@@ -179,7 +175,6 @@ export default function addTodo({ task, id, onSubmit }) {
     };
     const handleDate = (e) => {
         setTodo(todo => ({ ...todo, expiry: Math.ceil(((new Date(e.target.value) - new Date()) / (24 * 60 * 60 * 1000))) }))
-        console.log(todo.expiry)
 
         setDate(e.target.value)
 
@@ -207,7 +202,6 @@ export default function addTodo({ task, id, onSubmit }) {
 
             }),
         });
-        console.log(createdNote)
         setNote("")
         setreload(!reload)
         setLoadingAdd(false)

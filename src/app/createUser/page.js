@@ -37,7 +37,6 @@ export default function create() {
 
             router.replace(url)
 
-            console.log(session)
         }
 
     }, [session]);

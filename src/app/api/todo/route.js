@@ -11,9 +11,7 @@ export async function POST(req) {
 
         let { title, description, status, priority, expiry, userId } = await req.json()
 
-        console.log("creating todo")
         const createTodo = await Todo.create({ userId, title, description, status, priority, expiry })
-        console.log("created todo")
         return NextResponse.json(createTodo)
     }
     catch (error) {
@@ -32,7 +30,6 @@ export async function GET(req, res) {
         const page = await searchParams.get('page')
         const sortingElement = await searchParams.get('sortingElement')
         const sortingOrder = Number(await searchParams.get('sortingOrder'))
-        console.log(sortingOrder)
         const fetchTodo = await Todo.find({ userId: userId, isDeleted: false }).sort({ [sortingElement]: sortingOrder }).limit(limit).skip((page) * limit);
 
         return NextResponse.json(fetchTodo)
@@ -73,11 +70,9 @@ export async function DELETE(req) {
     const todo = await req.json();
     // storing todoId in the id var
     const id = todo._id;
-    console.log(id)
     // creating a db client
     try {
         if (id) {
-            console.log(id)
             // deleting user based on its id
             const res = await Todo.findByIdAndDelete(id);
             if (!res) {

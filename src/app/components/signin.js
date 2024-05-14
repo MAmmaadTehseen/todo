@@ -52,7 +52,6 @@ export default function item() {
 
     }
     catch (error) {
-      console.log("error:", error);
 
     }
 

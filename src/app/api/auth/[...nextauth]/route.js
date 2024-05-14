@@ -13,7 +13,6 @@ export const authOptions = {
                 const { email, password } = credentials
 
                 const user = await User.findOne({ email });
-                console.log(user);
                 if (!user) {
                     return null
                 }

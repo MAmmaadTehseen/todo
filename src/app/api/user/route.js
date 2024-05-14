@@ -12,7 +12,6 @@ export async function POST(req) {
 
 
         const createUser = await User.create({ name, email, password: hash, url })
-        console.log("CREATING USER")
         return NextResponse.json(createUser)
     }
     catch (error) {
@@ -30,7 +29,6 @@ export async function GET(req, res) {
 
 
         const fetchUser = await User.find({});
-        // console.log("getting USer")
         return NextResponse.json(fetchUser)
     }
     catch (error) {

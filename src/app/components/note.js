@@ -23,7 +23,6 @@ export default function note({ note, id, date, fetchdata }) {
             })
         })
         fetchdata()
-        console.log("delete")
     }
     const handleUpdate = () => {
         setOpenMain(false)

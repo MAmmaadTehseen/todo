@@ -124,8 +124,6 @@ export default function profile() {
 
             }),
         });
-        console.log(newPassword)
-        console.log(updateUser.status)
         setLoading(false)
         if (updateUser.status == 400) {
             setError("wrong password")

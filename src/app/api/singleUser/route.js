@@ -5,7 +5,6 @@ export async function GET(req, res) {
     try {
         const searchParams = req.nextUrl.searchParams
         const id = await searchParams.get('id')
-        console.log("getting User")
         const fetchUser = await User.findById(id);
         return NextResponse.json(fetchUser)
     }

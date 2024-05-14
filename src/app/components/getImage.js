@@ -21,7 +21,6 @@ export default function getImage({ onSubmit }) {
             setImageUrl(reader.result)
             setImage(reader.result)
 
-            console.log('RESULT', reader.result)
         }
         reader.readAsDataURL(file);
         setDisable(false)
@@ -49,7 +48,6 @@ export default function getImage({ onSubmit }) {
 
             }),
         });
-        console.log("image")
         if (!includeImage) {
             setError("Error")
             return

@@ -10,9 +10,7 @@ export async function POST(req) {
 
         let { description, todoId } = await req.json()
 
-        console.log("creating note")
         const createNote = await Note.create({ description, todoId })
-        console.log("created note")
         return NextResponse.json(createNote)
     }
     catch (error) {

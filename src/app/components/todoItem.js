@@ -36,7 +36,6 @@ export default function item({ data, setMessage, id, setsortingElement, setsorti
 
     const deleteTodo = async (id) => {
         setMessage("")
-        console.log("id", id)
         setLoading(true)
         const deletedTodo = await fetch('/api/todo', {
             method: 'PUT',
@@ -53,7 +52,6 @@ export default function item({ data, setMessage, id, setsortingElement, setsorti
         });
         fetchdata()
         setIsOpenDelete(false)
-        console.log(deletedTodo.json())
     }
 
     const idDelete = (iid) => {
@@ -63,7 +61,6 @@ export default function item({ data, setMessage, id, setsortingElement, setsorti
     const idUpdate = (iid) => {
         setIsOpen(true)
         setId(iid)
-        console.log("open update")
     }
 
     const customStyles = {
@@ -102,7 +99,7 @@ export default function item({ data, setMessage, id, setsortingElement, setsorti
         <>
             <Table dataSource={data} pagination={false} className="-z-50 " loading={loading} >
 
-                <Column title="Title" dataIndex="title" key="title" sorter={(a, b, order = "abc") => { console.log(order); setsortingElement("title"); sort(order); }} render={(title) => (
+                <Column title="Title" dataIndex="title" key="title" sorter={(a, b, order = "abc") => {  setsortingElement("title"); sort(order); }} render={(title) => (
                     <>
                         {title.length > 20 ? `${title.slice(0, 20)} ....` : title}
                     </>
