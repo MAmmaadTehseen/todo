@@ -63,23 +63,7 @@ export default function item({ data, setMessage, id, setsortingElement, setsorti
         setId(iid)
     }
 
-    const customStyles = {
-        overlay: {
-            backgroundColor: 'rgba(0, 0, 0, 0.2)',
-            alignItems: "center"
-        },
-        content: {
-            backgroundColor: "white",
-            maxWidth: "fit-content",
-            height: "fit-content",
-            top: "10%",
-            left: "40%",
-            border: "3px solid white",
-            borderRadius: "30px",
 
-
-        }
-    }
     const sort = (order) => {
         if (order == "ascend") {
             setsortingOrder(1)
@@ -99,10 +83,10 @@ export default function item({ data, setMessage, id, setsortingElement, setsorti
         <>
             <Table dataSource={data} pagination={false} className="-z-50 " loading={loading} >
 
-                <Column title="Title" dataIndex="title" key="title" sorter={(a, b, order = "abc") => {  setsortingElement("title"); sort(order); }} render={(title) => (
-                    <>
+                <Column title="Title" dataIndex="title" key="title" sorter={(a, b, order = "abc") => { setsortingElement("title"); sort(order); }} render={(title) => (
+                    <div className=" text-base  font-medium">
                         {title.length > 20 ? `${title.slice(0, 20)} ....` : title}
-                    </>
+                    </div>
                 )} />
                 <Column title="Description" dataIndex="description" key="description" render={(description) => (
                     <>
@@ -119,6 +103,7 @@ export default function item({ data, setMessage, id, setsortingElement, setsorti
                     dataIndex="status"
                     key="status"
                     sorter={(a, b, order) => { setsortingElement("status"); sort(order); }}
+
                     render={(status) => (
 
 

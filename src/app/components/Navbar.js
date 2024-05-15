@@ -87,7 +87,7 @@ export default function navbar() {
 
                                             fontWeight={400}
                                             offsetY={24}
-                                            initials={initials}
+                                            initials={initials.toUpperCase()}
                                         />}
 
                                         {user?.url && <Image className="border rounded-full" src={user.url} fill={true} alt="profile photo" />}

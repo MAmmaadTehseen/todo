@@ -49,11 +49,12 @@ export default function addTodo({ task, id, onSubmit }) {
         const url = `/api/singleTodo/?id=${id}`
         const res = await fetch(url, { cache: "no-cache" });
         await res.json().then((res) => {
-            setDisable(false)
 
-            setTodo(res.todo)
+            setDisable(false)
+            setTodo(res[0])
             var tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + res.todo.expiry);
+            tomorrow.setDate(tomorrow.getDate() + res[0].expiry);
+
             let day = tomorrow.getDate()
             let month = tomorrow.getMonth() + 1
             let year = tomorrow.getYear() + 1900
@@ -63,7 +64,7 @@ export default function addTodo({ task, id, onSubmit }) {
             }
 
 
-            setNotes(res.note)
+            setNotes(res[0].notes)
 
             setLoadingData(false)
         })
@@ -104,15 +105,15 @@ export default function addTodo({ task, id, onSubmit }) {
             setError("Enter priority")
             return
         }
+        else if (!todo.expiry) {
+            setError("Select a date")
+            return
+        }
         else if (todo.expiry <= 0) {
             setError("Previous date not Allowed")
             return
         }
 
-        else if (!todo.expiry) {
-            setError("Select a date")
-            return
-        }
 
         setLoading(true)
 
@@ -296,7 +297,7 @@ export default function addTodo({ task, id, onSubmit }) {
                         </div>
                         {errorNote && <div className=" border border-red-600 rounded-md w-fit mt-1    px-3">{errorNote}</div>}
                         <LoadingButton loading={loadingAdd} disabled={loadingAdd} color='primary' variant='contained' className='absolute top-8 right-0 border rounded-md w-fit p-1 m-1' onClick={addNote} >Add Note</LoadingButton>
-                        {!loading && notes?.description != "" && todo.description != "" && <div className="mt-4 mx-2">
+                        {!loading && notes != [] && todo.description != "" && <div className="mt-4 mx-2">
                             {notes.map(blog => (
                                 <div key={blog._id}  >
 

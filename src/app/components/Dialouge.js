@@ -1,11 +1,8 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
-import Slide from '@mui/material/Slide';
 import { LoadingButton } from '@mui/lab';
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+
 
 export default function AlertDialogSlide({ isOpenDelete, setIsOpenDelete, deleteTodo, Deleted, id, task }) {
   const [loading, setLoading] = React.useState(false)
@@ -33,8 +30,8 @@ export default function AlertDialogSlide({ isOpenDelete, setIsOpenDelete, delete
       </div>
       <div className='flex flex-row-reverse'>
 
-        <Button className='m-2' color='success' variant="contained" onClick={handleDisagree}>Cancel</Button>
         <LoadingButton className='m-2' loading={loading} color='error' variant="contained" onClick={handleAgree}>Delete</LoadingButton>
+        <Button className='m-2' color='success' variant="contained" onClick={handleDisagree}>Cancel</Button>
       </div>
     </div>
 

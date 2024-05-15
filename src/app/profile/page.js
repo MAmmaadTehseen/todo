@@ -1,15 +1,14 @@
 "use client"
 import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { AvatarComponent } from 'avatar-initials';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import Modal from 'react-modal'
 import GetImage from "../components/GetImage";
 import Image from "next/image";
 import { Button } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
+import { Modal } from "antd";
 
 
 
@@ -180,7 +179,7 @@ export default function profile() {
                             <div className="flex  justify-center items-center sm:mx-auto sm:w-full sm:max-w-sm">
                                 <h2 className=" p-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Profile </h2>
                                 <div className="flex justify-center">
-                                    {user &&
+                                    {user.name != "" &&
                                         <div className="relative h-20 w-20 justify-center">
                                             <AvatarComponent
                                                 classes="rounded-full"
@@ -194,7 +193,7 @@ export default function profile() {
 
                                                 fontWeight={400}
                                                 offsetY={60}
-                                                initials={initials}
+                                                initials={initials.toUpperCase()}
                                             />
 
 
@@ -202,9 +201,9 @@ export default function profile() {
 
                                             <div className="m-2">
                                                 <Button color="success" variant="contained" className="m-2" onClick={() => setIsOpen(true)}>Edit</Button>
-                                                <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)} style={customStyles}>
+                                                <Modal open={isOpen} onCancel={() => setIsOpen(false)} destroyOnClose footer={null} maskClosable={false} >
                                                     <GetImage onSubmit={handleSubmit} />
-                                                    <button className='absolute top-5 right-5' onClick={() => setIsOpen(false)}><FontAwesomeIcon style={{ fontSize: "25px" }} icon={faXmark}></FontAwesomeIcon></button>
+
                                                 </Modal>
 
                                             </div>

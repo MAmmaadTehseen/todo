@@ -3,11 +3,8 @@ import AddTodo from "../components/addTodo"
 import TodoItem from "../components/todoItem"
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import Message from '../components/Alert';
 import Skeleton from '../components/Skeleton';
-import * as React from 'react';
 import TablePagination from '@mui/material/TablePagination';
 import { FloatButton, Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
@@ -24,7 +21,7 @@ export default function Home() {
     const [count, setCount] = useState()
     const [loading, setLoading] = useState(true)
     const [TableLoading, setTableLoading] = useState(false)
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
     const [sortingElement, setsortingElement] = useState("createdAt")
     const [sortingOrder, setsortingOrder] = useState("-1")
     useEffect(() => {
@@ -37,7 +34,7 @@ export default function Home() {
     useEffect(() => {
         setTimeout(() => {
             closeMessage()
-        }, 4000);
+        }, 2500);
     }, [message])
     const closeMessage = () => {
         setMessage("")
@@ -47,6 +44,7 @@ export default function Home() {
 
         const url = `/api/todo/?id=${session?.user?.id}&limit=${rowsPerPage}&page=${page}&sortingElement=${sortingElement}&sortingOrder=${sortingOrder}`
         const res = await fetch(url, { cache: "no-cache" });
+
         if (res.ok) {
 
 
@@ -109,24 +107,6 @@ export default function Home() {
 
 
 
-    const customStyles = {
-        overlay: {
-            backgroundColor: 'rgba(0, 0, 0, 0.9)',
-            alignItems: "center"
-        },
-        content: {
-
-            backgroundColor: "white",
-            maxWidth: "fit-content",
-            height: "fit-content",
-            top: "10%",
-            left: "40%",
-            border: "3px solid blue",
-            borderRadius: "30px"
-
-        }
-    }
-
 
 
 
@@ -155,7 +135,7 @@ export default function Home() {
 
 
                         </div>
-                        <Modal open={isOpen} onCancel={() => setIsOpen(false)} footer={null} >
+                        <Modal open={isOpen} onCancel={() => setIsOpen(false)} footer={null} destroyOnClose maskClosable={false} >
                             <AddTodo task={"Create"} id={null} onSubmit={handleSubmit} />
 
                         </Modal>
