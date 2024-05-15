@@ -9,19 +9,7 @@ export default function message({ message }) {
             {message &&
 
                 <Alert className=" " severity="success"
-                // action={
-                //     <IconButton
-                //         aria-label="close"
-                //         color="inherit"
-                //         size="small"
 
-                //         onClick={() => {
-                //             setOpen(false)
-                //         }}
-                //     >
-                //         <CloseIcon fontSize="inherit" />
-                //     </IconButton>
-                // }
                 >{message}</Alert>
             }
         </div>

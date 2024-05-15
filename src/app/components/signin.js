@@ -9,7 +9,7 @@ import { LoadingButton } from "@mui/lab";
 
 export default function item() {
   const { data: session } = useSession();
-  const [signin, setSignin] = useState(false);
+  const [signInLoader, setSignInLoader] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -32,7 +32,7 @@ export default function item() {
   const handleSubmit = async (e) => {
 
     setError("")
-    setSignin(true)
+    setSignInLoader(true)
     e.preventDefault()
     try {
       const res = await signIn("credentials", {
@@ -43,7 +43,7 @@ export default function item() {
       if (res.error) {
 
         setError("invalid credentials")
-        setSignin(false)
+        setSignInLoader(false)
         return
       }
 
@@ -92,7 +92,7 @@ export default function item() {
 
             <div>
               <LoadingButton color="success" variant="contained" onClick={handleSubmit} type="submit" className="bg-indigo-500"
-                loading={signin}>
+                loading={signInLoader}>
 
                 Sign in
               </LoadingButton>

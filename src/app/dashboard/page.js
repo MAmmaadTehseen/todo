@@ -11,26 +11,34 @@ import { PlusOutlined } from '@ant-design/icons';
 
 
 export default function Home() {
-    let bg = true
-    const [reload, setreload] = useState(true)
     const [isOpen, setIsOpen] = useState(false)
     const [message, setMessage] = useState("")
     const { data: session } = useSession()
-    const [blogs, setBlogs] = useState(false)
+    const [blogs, setBlogs] = useState()
     const [page, setPage] = useState(0)
     const [count, setCount] = useState()
-    const [loading, setLoading] = useState(true)
     const [TableLoading, setTableLoading] = useState(false)
     const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [sortingElement, setsortingElement] = useState("createdAt")
-    const [sortingOrder, setsortingOrder] = useState("-1")
+    const [sortingElement, setSortingElement] = useState("createdAt")
+    const [sortingOrder, setSortingOrder] = useState("-1")
     useEffect(() => {
         if (session) {
-            fetchdata()
+            getAllTodoData()
 
         }
 
     }, [session])
+    useEffect(() => {
+        console.log("object")
+
+        return () => {
+
+        }
+    }, [])
+
+
+    // (() => { console.log("object") })
+
     useEffect(() => {
         setTimeout(() => {
             closeMessage()
@@ -39,7 +47,7 @@ export default function Home() {
     const closeMessage = () => {
         setMessage("")
     }
-    async function fetchdata() {
+    async function getAllTodoData() {
 
 
         const url = `/api/todo/?id=${session?.user?.id}&limit=${rowsPerPage}&page=${page}&sortingElement=${sortingElement}&sortingOrder=${sortingOrder}`
@@ -64,11 +72,11 @@ export default function Home() {
 
         if (session) {
             setTableLoading(true)
-            fetchdata()
+            getAllTodoData()
 
         }
 
-    }, [sortingOrder, sortingElement, page, rowsPerPage, loading])
+    }, [sortingOrder, sortingElement, page, rowsPerPage])
 
     const handlePage = async (e, newPage) => {
 
@@ -80,8 +88,8 @@ export default function Home() {
 
     };
     const handleChangeRowsPerPage = async (event) => {
-        await setRowsPerPage(parseInt(event.target.value));
-        await setPage(0);
+        setRowsPerPage(parseInt(event.target.value));
+        setPage(0);
         setTableLoading(true)
 
 
@@ -91,9 +99,8 @@ export default function Home() {
     const handleSubmit = () => {
         setMessage("Added todo succesfully")
         setTableLoading(true)
-        fetchdata()
+        getAllTodoData()
         setIsOpen(false);
-        setreload(!reload)
         return
 
 
@@ -145,7 +152,7 @@ export default function Home() {
 
                         {blogs &&
 
-                            < TodoItem data={blogs} setMessage={setMessage} setsortingElement={setsortingElement} sortingOrder={sortingOrder} setsortingOrder={setsortingOrder} loading={TableLoading} setLoading={setTableLoading} fetchdata={fetchdata} className="mb-5" />
+                            < TodoItem data={blogs} setMessage={setMessage} setSortingElement={setSortingElement} sortingOrder={sortingOrder} setSortingOrder={setSortingOrder} loading={TableLoading} setLoading={setTableLoading} getAllTodoData={getAllTodoData} className="mb-5" />
 
                         }
                     </div>}
@@ -158,7 +165,7 @@ export default function Home() {
                                 onPageChange={handlePage}
                                 rowsPerPage={rowsPerPage}
                                 onRowsPerPageChange={handleChangeRowsPerPage}
-                                rowsPerPageOptions={[5, 10, 20, 50, 100]}
+                                rowsPerPageOptions={[5, 10, 20, 50, 75, 100]}
                             />
                         </div>
                     </div>}

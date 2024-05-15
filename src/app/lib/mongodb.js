@@ -1,7 +1,7 @@
 
 import mongoose from 'mongoose'
 
-const MONGODB_URI = process.env.MONGODB_URL
+const MONGODB_URI = process.env.mongodbUrl
 
 if (!MONGODB_URI) {
   throw new Error(

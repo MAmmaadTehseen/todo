@@ -12,10 +12,7 @@ export default function create() {
     const { data: session } = useSession()
     const router = useRouter()
     const [register, setRegister] = useState(false);
-    // const [name, setName] = useState("")
-    // const [email, setEmail] = useState("")
-    // const [password, setPassword] = useState("")
-    const [user, setuser] = useState({
+    const [user, setUser] = useState({
         name: "",
         email: "",
         password: "",
@@ -30,19 +27,14 @@ export default function create() {
 
     useEffect(() => {
         if (session) {
-
-
-            const id = session?.user?.id
             const url = `dashboard`
-
             router.replace(url)
-
         }
 
     }, [session]);
 
     const createUser = async (e) => {
-        setError()
+        setError("")
         e.preventDefault();
         if (user.name.split(" ").length < 2) {
             setError("please enter last and first name")
@@ -107,13 +99,13 @@ export default function create() {
                             <div>
                                 <label className="block text-sm font-medium leading-6 text-gray-900">Full Name</label>
                                 <div className="mt-2">
-                                    <input value={user.name} onChange={(e) => { setuser(user => ({ ...user, name: e.target.value })) }} required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-graysetuser(user => ({ ...user, name: e.target.value }))-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                    <input value={user.name} onChange={(e) => { setUser(user => ({ ...user, name: e.target.value })) }} required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-graysetuser(user => ({ ...user, name: e.target.value }))-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                 </div>
                             </div>
                             <div>
                                 <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">Email address</label>
                                 <div className="mt-2">
-                                    <input value={user.email} onChange={(e) => { setuser(user => ({ ...user, email: e.target.value })) }} type="email" autoComplete="email" required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                    <input value={user.email} onChange={(e) => { setUser(user => ({ ...user, email: e.target.value })) }} type="email" autoComplete="email" required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                 </div>
                             </div>
 
@@ -123,7 +115,7 @@ export default function create() {
 
                                 </div>
                                 <div className="mt-2">
-                                    <input value={user.password} onChange={(e) => { setuser(user => ({ ...user, password: e.target.value })) }} type="password" autoComplete="current-password" required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                    <input value={user.password} onChange={(e) => { setUser(user => ({ ...user, password: e.target.value })) }} type="password" autoComplete="current-password" required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                 </div>
                             </div>
                             <div>

@@ -1,5 +1,5 @@
 "use client"
-import { faL, faPenToSquare, faTrashCan, faXmark } from '@fortawesome/free-solid-svg-icons'
+import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { LoadingButton } from '@mui/lab'
 import React, { useState } from 'react'
@@ -7,12 +7,12 @@ import DeleteNote from './Dialouge'
 import { Modal } from 'antd'
 
 export default function note({ note, id, date, fetchdata }) {
-    const [openMain, setOpenMain] = useState(true)
-    const [openUpdate, setOpenUpdate] = useState(false)
+    const [openMainNote, setOpenMainNote] = useState(true)
+    const [openUpdateNote, setOpenUpdateNote] = useState(false)
     const [note2, setNote2] = useState(note)
-    const [focus, setfocus] = useState(note)
-    const [noteUpdate, setnoteUpdate] = useState(false)
-    const [isOpenDelete, setisOpenDelete] = useState(false)
+    const [focus, setFocus] = useState(note)
+    const [noteUpdate, setNoteUpdate] = useState(false)
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false)
 
     const deleteNote = async () => {
         const resp = await fetch(`/api/note`, {
@@ -25,12 +25,12 @@ export default function note({ note, id, date, fetchdata }) {
         fetchdata()
     }
     const handleUpdate = () => {
-        setOpenMain(false)
-        setOpenUpdate(true)
+        setOpenMainNote(false)
+        setOpenUpdateNote(true)
     }
 
     const updateNote = async () => {
-        setnoteUpdate(true)
+        setNoteUpdate(true)
 
         const updatedNote = await fetch('/api/note', {
             method: 'PUT',
@@ -45,33 +45,15 @@ export default function note({ note, id, date, fetchdata }) {
             }),
         });
         fetchdata()
-        setOpenMain(true)
-        setnoteUpdate(false)
-        setOpenUpdate(false)
+        setOpenMainNote(true)
+        setNoteUpdate(false)
+        setOpenUpdateNote(false)
 
-    }
-    const customStyles = {
-        overlay: {
-            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-            alignItems: "center"
-        },
-        content: {
-            // backgroundColor: 'rgba(0, 0, 0, 0.7)'
-            backgroundColor: "white",
-            maxWidth: "fit-content",
-            maxHeight: "fit-content",
-            display: "",
-            top: "15px",
-            left: "40%",
-            border: "3px solid blue",
-            borderRadius: "30px"
-
-        }
     }
 
     return (
         <div className={``}>
-            {openMain && <div className={` bg-green-300 border border-green-700 p-1 m-2`}>
+            {openMainNote && <div className={` bg-green-300 border border-green-700 p-1 m-2`}>
 
                 <div className='flex justify-between  '>
                     <div className=' w-40 '>
@@ -81,12 +63,12 @@ export default function note({ note, id, date, fetchdata }) {
 
                     <div className="flex flex-row-reverse">
 
-                        <button className="mx-6  " onClick={() => setisOpenDelete(true)}  >
+                        <button className="mx-6  " onClick={() => setIsDeleteOpen(true)}  >
                             <FontAwesomeIcon style={{ fontSize: "15px" }} icon={faTrashCan}></FontAwesomeIcon>
                         </button>
 
-                        <Modal centered open={isOpenDelete} onCancel={() => setIsOpen(false)} footer={null} maskClosable={false} mask={true}  >
-                            <DeleteNote id={id} task={"Note"} deleteTodo={deleteNote} Deleted={() => { }} isOpenDelete={isOpenDelete} setIsOpenDelete={setisOpenDelete} />
+                        <Modal centered open={isDeleteOpen} onCancel={() => setIsOpen(false)} footer={null} maskClosable={false} mask={true}  >
+                            <DeleteNote id={id} task={"Note"} deleteTodo={deleteNote} Deleted={() => { }} isDeleteOpen={isDeleteOpen} setIsOpenDelete={setIsDeleteOpen} />
                         </Modal>
 
 
@@ -106,7 +88,7 @@ export default function note({ note, id, date, fetchdata }) {
                     {/* <p className='text-center text-sm '>At: {date.slice(-13, -5)}    </p> */}
                 </div>
             </div>}
-            {openUpdate && <div className={` flex justify-between bg-green-300 border border-green-700 p-1 m-2`}>
+            {openUpdateNote && <div className={` flex justify-between bg-green-300 border border-green-700 p-1 m-2`}>
                 <div className='flex w-40 '>
                     <input autoFocus={focus} className='bg-green-300 px-1' type='text' value={note2} onChange={(e) => { setNote2(e.target.value) }} />
                 </div>

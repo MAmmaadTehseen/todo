@@ -1,4 +1,3 @@
-import dbConnect from "../../lib/mongodb";
 import { NextResponse } from "next/server";
 import User from "@/app/api/models/userModel";
 import bcrypt from "bcrypt"
@@ -6,9 +5,9 @@ export async function POST(req) {
     try {
 
 
-        let { name, email, password, url } = await req.json()
-        const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(password, salt)
+        let { name, email, password, url } = req.json()
+        const salt = bcrypt.genSalt(10);
+        const hash = bcrypt.hash(password, salt)
 
 
         const createUser = await User.create({ name, email, password: hash, url })
@@ -59,14 +58,13 @@ export async function PUT(req) {
                 status: 400,
             })
         }
-        const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(password, salt)
+        const salt = bcrypt.genSalt(10);
+        const hash = bcrypt.hash(password, salt)
         newUser.password = hash
 
     }
 
 
-    await dbConnect()
     let todo = await User.findByIdAndUpdate(id, { $set: newUser })
     return NextResponse.json(todo, { status: 200 })
 

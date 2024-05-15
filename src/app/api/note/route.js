@@ -8,7 +8,7 @@ export async function POST(req) {
 
 
 
-        let { description, todoId } = await req.json()
+        let { description, todoId } = req.json()
 
         const createNote = await Note.create({ description, todoId })
         return NextResponse.json(createNote)
@@ -24,7 +24,7 @@ export async function POST(req) {
 export async function GET(req, res) {
     try {
         const searchParams = req.nextUrl.searchParams
-        const todoId = await searchParams.get('id')
+        const todoId = searchParams.get('id')
         // console.log("getting note")
         const fetchTodo = await Note.find({ todoId: todoId }).sort({ createdAt: -1 });
         return NextResponse.json(fetchTodo)

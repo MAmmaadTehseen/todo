@@ -2,8 +2,6 @@
 import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react";
 import { AvatarComponent } from 'avatar-initials';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import GetImage from "../components/GetImage";
 import Image from "next/image";
 import { Button } from "@mui/material";
@@ -23,9 +21,9 @@ export default function profile() {
     // const [url, setUrl] = useState("")
     const [password, setPassword] = useState("")
     const [newPassword, setNewPassword] = useState("")
-    const [password2, setPassword2] = useState("")
+    const [confirmPassword, setConfirmPassword] = useState("")
     const [error, setError] = useState("");
-    const [initials, setInitials] = useState("AM")
+    const [userNameInitials, setUserNameInitials] = useState("AM")
     const [clicked, setClicked] = useState(false);
     const [isOpen, setIsOpen] = useState(false)
     const [user, setUser] = useState({
@@ -55,7 +53,7 @@ export default function profile() {
         if (session) {
             fetchdata()
             inint = inint.split(" ")
-            setInitials(`${inint[0][0]}${inint[1][0]}`)
+            setUserNameInitials(`${inint[0][0]}${inint[1][0]}`)
 
         }
 
@@ -78,7 +76,7 @@ export default function profile() {
 
         }
 
-    }, [session, error])
+    }, [session])
 
     const updateUser = async () => {
 
@@ -90,7 +88,7 @@ export default function profile() {
         }
 
         if (clicked) {
-            if (newPassword != password2) {
+            if (newPassword != confirmPassword) {
                 setError("Password does not match")
                 return
             }
@@ -193,7 +191,7 @@ export default function profile() {
 
                                                 fontWeight={400}
                                                 offsetY={60}
-                                                initials={initials.toUpperCase()}
+                                                initials={userNameInitials.toUpperCase()}
                                             />
 
 
@@ -255,7 +253,7 @@ export default function profile() {
 
                                             </div>
                                             <div className="mt-2">
-                                                <input value={password2} onChange={(e) => { setPassword2(e.target.value) }} type="password" autocomplete="new-password" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                                <input value={confirmPassword} onChange={(e) => { setConfirmPassword(e.target.value) }} type="password" autocomplete="new-password" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                             </div>
                                         </div>
                                     </div>}

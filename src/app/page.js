@@ -1,5 +1,5 @@
 "use client"
-import Signin from "./components/Signin"
+import SignIn from "./components/Signin"
 
 
 
@@ -11,7 +11,7 @@ export default function page() {
 
       <div className=" ">
 
-        <Signin />
+        <SignIn />
 
       </div>
     </div>

@@ -9,7 +9,7 @@ export async function POST(req) {
 
 
 
-        let { title, description, status, priority, expiry, userId } = await req.json()
+        let { title, description, status, priority, expiry, userId } = req.json()
 
         const createTodo = await Todo.create({ userId, title, description, status, priority, expiry })
         return NextResponse.json(createTodo)
@@ -25,11 +25,11 @@ export async function POST(req) {
 export async function GET(req, res) {
     try {
         const searchParams = req.nextUrl.searchParams
-        const userId = await searchParams.get('id')
-        const limit = await searchParams.get('limit')
-        const page = await searchParams.get('page')
-        const sortingElement = await searchParams.get('sortingElement')
-        const sortingOrder = Number(await searchParams.get('sortingOrder'))
+        const userId = searchParams.get('id')
+        const limit = searchParams.get('limit')
+        const page = searchParams.get('page')
+        const sortingElement = searchParams.get('sortingElement')
+        const sortingOrder = Number(searchParams.get('sortingOrder'))
         const fetchTodo = await Todo.find({ userId: userId, isDeleted: false }).sort({ [sortingElement]: sortingOrder }).limit(limit).skip((page) * limit);
 
         return NextResponse.json(fetchTodo)
@@ -67,7 +67,7 @@ export async function PUT(req) {
 
 export async function DELETE(req) {
     // requesting data from the front-end
-    const todo = await req.json();
+    const todo = req.json();
     // storing todoId in the id var
     const id = todo._id;
     // creating a db client

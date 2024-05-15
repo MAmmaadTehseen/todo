@@ -2,18 +2,18 @@
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import AddTodo from "./addTodo"
-import { faPenToSquare, faTrashCan, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import DeleteTodo from "../components/Dialouge"
 import { ConfigProvider, Modal, Table, Tag } from 'antd';
 const { Column } = Table;
 
 
-export default function item({ data, setMessage, id, setsortingElement, setsortingOrder, loading, setLoading, fetchdata }) {
+export default function item({ data, setMessage, setSortingElement, setSortingOrder, loading, setLoading, getAllTodoData }) {
 
     const [isOpen, setIsOpen] = useState(false)
-    const [iid, setId] = useState(false)
-    const [isOpenDelete, setIsOpenDelete] = useState(false)
+    const [id, setId] = useState(false)
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false)
 
 
 
@@ -27,7 +27,7 @@ export default function item({ data, setMessage, id, setsortingElement, setsorti
         setMessage("")
         setIsOpen(false);
         setLoading(true)
-        fetchdata()
+        getAllTodoData()
         setMessage("Successfully updated Todo")
 
     };
@@ -50,32 +50,32 @@ export default function item({ data, setMessage, id, setsortingElement, setsorti
 
             }),
         });
-        fetchdata()
-        setIsOpenDelete(false)
+        getAllTodoData()
+        setIsDeleteOpen(false)
     }
 
-    const idDelete = (iid) => {
-        setIsOpenDelete(true)
-        setId(iid)
+    const idDelete = (id) => {
+        setIsDeleteOpen(true)
+        setId(id)
     }
-    const idUpdate = (iid) => {
+    const idUpdate = (id) => {
         setIsOpen(true)
-        setId(iid)
+        setId(id)
     }
 
 
     const sort = (order) => {
         if (order == "ascend") {
-            setsortingOrder(1)
+            setSortingOrder(1)
 
         }
         else if (order == "descend") {
-            setsortingOrder(-1)
+            setSortingOrder(-1)
 
         }
         else {
-            setsortingOrder(1)
-            setsortingElement("createdAt")
+            setSortingOrder(1)
+            setSortingElement("createdAt")
         }
     }
 
@@ -83,7 +83,7 @@ export default function item({ data, setMessage, id, setsortingElement, setsorti
         <>
             <Table dataSource={data} pagination={false} className="-z-50 " loading={loading} >
 
-                <Column title="Title" dataIndex="title" key="title" sorter={(a, b, order = "abc") => { setsortingElement("title"); sort(order); }} render={(title) => (
+                <Column title="Title" dataIndex="title" key="title" sorter={(a, b, order = "abc") => { setSortingElement("title"); sort(order); }} render={(title) => (
                     <div className=" text-base  font-medium">
                         {title.length > 20 ? `${title.slice(0, 20)} ....` : title}
                     </div>
@@ -93,7 +93,7 @@ export default function item({ data, setMessage, id, setsortingElement, setsorti
                         {description.length > 40 ? `${description.slice(0, 40)} ....` : description}
                     </>
                 )} />
-                <Column title="Expiry" dataIndex="expiry" key="expiry" sorter={(a, b, order) => { setsortingElement("expiry"); sort(order); }} render={(expiry) => (
+                <Column title="Expiry" dataIndex="expiry" key="expiry" sorter={(a, b, order) => { setSortingElement("expiry"); sort(order); }} render={(expiry) => (
                     <>
                         {`${expiry} days remaing`}
                     </>
@@ -102,7 +102,7 @@ export default function item({ data, setMessage, id, setsortingElement, setsorti
                     title="Status"
                     dataIndex="status"
                     key="status"
-                    sorter={(a, b, order) => { setsortingElement("status"); sort(order); }}
+                    sorter={(a, b, order) => { setSortingElement("status"); sort(order); }}
 
                     render={(status) => (
 
@@ -120,7 +120,7 @@ export default function item({ data, setMessage, id, setsortingElement, setsorti
                     title="priority"
                     dataIndex="priority"
                     key="priority"
-                    sorter={(a, b, order) => { setsortingElement("priority"); sort(order); }}
+                    sorter={(a, b, order) => { setSortingElement("priority"); sort(order); }}
                     render={(priority) => (
 
                         <Tag color={priority == 'High' ? "red" : priority == 'Low' ? "yellow" : "orange"}>
@@ -166,11 +166,11 @@ export default function item({ data, setMessage, id, setsortingElement, setsorti
                 />
             </Table >
             <Modal open={isOpen} onCancel={() => setIsOpen(false)} footer={null} maskClosable={false} mask={true} destroyOnClose  >
-                <AddTodo task={"Update"} id={iid} onSubmit={handleSubmit} />
+                <AddTodo task={"Update"} id={id} onSubmit={handleSubmit} />
 
             </Modal>
-            <Modal open={isOpenDelete} onCancel={() => setIsOpenDelete(false)} footer={null} maskClosable={false} mask={true} centered   >
-                <DeleteTodo task={"Todo"} id={iid} Deleted={Deleted} deleteTodo={deleteTodo} isOpenDelete={isOpenDelete} setIsOpenDelete={setIsOpenDelete} />
+            <Modal open={isDeleteOpen} onCancel={() => setIsDeleteOpen(false)} footer={null} maskClosable={false} mask={true} centered destroyOnClose   >
+                <DeleteTodo task={"Todo"} id={id} Deleted={Deleted} deleteTodo={deleteTodo} isDeleteOpen={isDeleteOpen} setIsDeleteOpen={setIsDeleteOpen} />
 
             </Modal>
         </>

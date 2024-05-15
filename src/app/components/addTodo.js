@@ -21,7 +21,6 @@ export default function addTodo({ task, id, onSubmit }) {
     const [date, setDate] = useState(`${new Date().getYear()}-${new Date().getMonth()}-${new Date().getDate()}`)
     const [loading, setLoading] = useState(false)
     const [loadingData, setLoadingData] = useState(false)
-    const [noteLoading, setNoteLoading] = useState(false)
     const [loadingAdd, setLoadingAdd] = useState(false)
     const [disable, setDisable] = useState(false)
     const [errorNote, setErrorNote] = useState("")
@@ -31,7 +30,7 @@ export default function addTodo({ task, id, onSubmit }) {
         createdAt: ""
     })
     const [note, setNote] = useState(null)
-    const [reload, setreload] = useState(true)
+    const [reload, setReload] = useState(true)
 
 
     let close = () => onSubmit()
@@ -43,7 +42,7 @@ export default function addTodo({ task, id, onSubmit }) {
 
 
 
-    async function fetchdata() {
+    async function getSingleTodoData() {
 
 
         const url = `/api/singleTodo/?id=${id}`
@@ -74,15 +73,27 @@ export default function addTodo({ task, id, onSubmit }) {
 
     useEffect(() => {
 
+
         if (task === "Update") {
             setDisable(true)
             setLoadingData(true)
 
-            fetchdata()
+            getSingleTodoData()
+
+
 
         }
 
 
+        // if (task === "Update") {
+        //     setDisable(true)
+        //     setLoadingData(true)
+
+        //     getSingleTodoData()
+
+
+
+        // }
     }, [])
 
 
@@ -184,11 +195,10 @@ export default function addTodo({ task, id, onSubmit }) {
 
     const addNote = async () => {
         setLoadingAdd(true)
-        setNoteLoading(true)
         setErrorNote("")
         if (!note) {
-            setNoteLoading(false)
             setErrorNote("Enter a note first")
+            setLoadingAdd(false)
             return
         }
         const createdNote = await fetch('/api/note', {
@@ -204,10 +214,9 @@ export default function addTodo({ task, id, onSubmit }) {
             }),
         });
         setNote("")
-        setreload(!reload)
+        setReload(!reload)
         setLoadingAdd(false)
-        fetchdata()
-        setNoteLoading(false)
+        getSingleTodoData()
     }
 
 
@@ -304,7 +313,7 @@ export default function addTodo({ task, id, onSubmit }) {
 
 
                                     <div>
-                                        <Note note={blog.description} date={blog.createdAt} id={blog._id} fetchdata={fetchdata} />
+                                        <Note note={blog.description} date={blog.createdAt} id={blog._id} getSingleTodoData={getSingleTodoData} />
 
                                     </div>
                                 </div>

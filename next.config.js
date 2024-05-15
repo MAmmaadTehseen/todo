@@ -21,4 +21,7 @@ module.exports = {
 }
 
 
+module.exports = {
+    reactStrictMode: false, // ← this
+}
 

@@ -12,13 +12,13 @@ import Link from "next/link";
 export default function navbar() {
     const [umenu, setUmenu] = useState("hidden");
     let { data: session } = useSession();
-    const [initials, setInitials] = useState("AM")
+    const [namesInitial, setNamesInitial] = useState("AM")
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         let name = (session?.user?.name)
-        async function fetchdata() {
+        async function getSingleUserData() {
 
 
             const url = `/api/singleUser/?id=${session?.user?.id}`
@@ -32,16 +32,16 @@ export default function navbar() {
         }
 
         if (session) {
-            fetchdata()
+            getSingleUserData()
             name = name.split(" ")
-            setInitials(`${name[0][0]}${name[1][0]}`)
+            setNamesInitial(`${name[0][0]}${name[1][0]}`)
 
         }
 
     }, [session])
 
 
-    const signout = () => {
+    const signOut = () => {
         setLoading(true)
         signOut()
     }
@@ -87,7 +87,7 @@ export default function navbar() {
 
                                             fontWeight={400}
                                             offsetY={24}
-                                            initials={initials.toUpperCase()}
+                                            namesInitial={namesInitial.toUpperCase()}
                                         />}
 
                                         {user?.url && <Image className="border rounded-full" src={user.url} fill={true} alt="profile photo" />}
@@ -121,7 +121,7 @@ export default function navbar() {
                                 <hr />
 
                                 <Link href={""} className="block  py-2 px-1 text-sm text-gray-700">
-                                    <LoadingButton onClick={() => signout()} type="submit" className="block  py-2 text-sm text-gray-700"
+                                    <LoadingButton onClick={() => signOut()} type="submit" className="block  py-2 text-sm text-gray-700"
                                         loading={loading}
 
                                     >

@@ -4,19 +4,19 @@ import { LoadingButton } from '@mui/lab';
 
 
 
-export default function AlertDialogSlide({ isOpenDelete, setIsOpenDelete, deleteTodo, Deleted, id, task }) {
+export default function AlertDialogSlide({ setIsDeleteOpen, deleteTodo, Deleted, id, task }) {
   const [loading, setLoading] = React.useState(false)
 
   const handleAgree = async () => {
     setLoading(true)
     await deleteTodo(id)
-    setIsOpenDelete(false);
+    setIsDeleteOpen(false);
     Deleted()
     setLoading(false)
   };
 
   const handleDisagree = () => {
-    setIsOpenDelete(false);
+    setIsDeleteOpen(false);
   };
 
   return (
