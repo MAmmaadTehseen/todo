@@ -38,7 +38,7 @@ export default function profile() {
 
     };
     // useEffect(() => {
-    //     let inint = (session?.user?.name)
+    //     
     //     async function getUserData() {
 
 
@@ -46,15 +46,16 @@ export default function profile() {
 
     //     if (session) {
     //         getUserData()
-    //         inint = inint.split(" ")
-    //         setUserNameInitials(`${inint[1][0]}${inint[2][0]}`)
+    //        
 
     //     }
 
     // }, [user])
     async function getUserData() {
 
-
+        let inint = (session?.user?.name)
+        inint = inint.split(" ")
+        setUserNameInitials(`${inint[1][0]}${inint[2][0]}`)
         const url = `/api/singleUser/?id=${session?.user?.id}`
         const res = await fetch(url, { cache: "no-cache" });
         if (res.ok) { setUser(await res.json()); }
@@ -158,7 +159,7 @@ export default function profile() {
                                 <div className="flex justify-center">
                                     {user.name != "" &&
                                         <div className="relative h-20 w-20 justify-center">
-                                            {user.url == "" && <Avatar size={80}>{userNameInitials}</Avatar>}
+                                            {!user.url && <Avatar size={80}>{userNameInitials.toUpperCase()}</Avatar>}
 
 
                                             {user?.url && <Avatar size={80} src={user.url}  ></Avatar>}
@@ -219,7 +220,7 @@ export default function profile() {
 
                                             </div>
                                             <div className="mt-2">
-                                                <input value={confirmPassword} onChange={(e) => { setConfirmPassword(e.target.value) }} type="password" autocomplete="new-password" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                                <input value={confirmPassword} onChange={(e) => { setConfirmPassword(e.target.value) }} type="password" autoComplete="new-password" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                             </div>
                                         </div>
                                     </div>}

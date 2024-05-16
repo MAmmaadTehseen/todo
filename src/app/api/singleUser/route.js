@@ -9,6 +9,6 @@ export async function GET(req, res) {
         return NextResponse.json(fetchUser)
     }
     catch (error) {
-        console.log("error fetching User")
+        return NextResponse.json("error fetching User")
     }
 }

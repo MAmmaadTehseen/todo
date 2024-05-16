@@ -9,7 +9,7 @@ export async function GET(req, res) {
         return NextResponse.json(fetchTodo)
     }
     catch (error) {
-        console.log("error fetching count")
+        return NextResponse.json("error fetching total")
     }
 
 

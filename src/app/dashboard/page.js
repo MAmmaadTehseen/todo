@@ -42,6 +42,7 @@ export default function Home() {
     }
     async function getAllTodoData() {
 
+        setTableLoading(true)
 
         const url = `/api/todo/?id=${session?.user?.id}&limit=${rowsPerPage}&page=${page}&sortingElement=${sortingElement}&sortingOrder=${sortingOrder}`
         const res = await fetch(url, { cache: "no-cache" });
@@ -64,7 +65,6 @@ export default function Home() {
 
 
         if (session) {
-            setTableLoading(true)
             getAllTodoData()
 
         }
@@ -74,7 +74,6 @@ export default function Home() {
     const handlePage = async (e, newPage) => {
 
         await setPage(newPage);
-        setTableLoading(true)
 
 
 
@@ -83,7 +82,6 @@ export default function Home() {
     const handleChangeRowsPerPage = async (event) => {
         setRowsPerPage(parseInt(event.target.value));
         setPage(0);
-        setTableLoading(true)
 
 
 
@@ -91,7 +89,6 @@ export default function Home() {
 
     const handleSubmit = () => {
         setMessage("Added todo succesfully")
-        setTableLoading(true)
         getAllTodoData()
         setIsOpen(false);
         return
@@ -114,7 +111,7 @@ export default function Home() {
         <>
 
             <Message message={message} onClose={closeMessage} />
-            <main className="min-h-fit mt-20">
+            <main className="min-h-fit mt-24">
 
 
                 <div className="px-12 mt-7 flex flex-col  space-y-5  ">

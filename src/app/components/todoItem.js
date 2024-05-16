@@ -118,7 +118,7 @@ export default function item({ data, setMessage, setSortingElement, setSortingOr
                 <Column
                     title="priority"
                     dataIndex="priority"
-                    sorter={(a, b, order) => { setSortingElement("priority"); sort(order); }}
+                    sorter={(x, y, order) => { setSortingElement("priority"); sort(order); }}
                     render={(priority) => (
 
                         <Tag color={priority == 'High' ? "red" : priority == 'Low' ? "yellow" : "orange"}>

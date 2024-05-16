@@ -14,7 +14,7 @@ export default function navbar() {
     const [umenu, setUmenu] = useState("hidden");
     let { data: session } = useSession();
     const [namesInitial, setNamesInitial] = useState("AM")
-    const [user, setUser] = useState(null)
+    const [user, setUser] = useState()
     const [loading, setLoading] = useState(false)
     async function getSingleUserData() {
 
@@ -35,7 +35,7 @@ export default function navbar() {
         if (session) {
             getSingleUserData()
             name = name.split(" ")
-            setNamesInitial(`${name[0][0]}${name[1][0]}`)
+            setNamesInitial(`${name[1][0]}${name[2][0]}`)
 
         }
 
@@ -67,7 +67,7 @@ export default function navbar() {
             <div className="flex "> </div>
             <div className="flex ">
 
-                {session &&
+                {user &&
                     <div className="flex justify-center text-center">
 
                         <div className="relative z-50">
@@ -76,10 +76,10 @@ export default function navbar() {
                                     <span className="absolute -inset-1.5"></span>
                                     <span className="sr-only">Open user menu</span>
                                     <div className=" flex justify-center border-white">
-                                        {user?.url == "" && <Avatar size={60}>{namesInitial}</Avatar>
+                                        {user?.url == "" && <Avatar size={60}>{namesInitial.toUpperCase()}</Avatar>
                                         }
 
-                                        {user?.url && <Avatar size={60} src={user.url} />}
+                                        {user?.url != "" && <Avatar size={60} src={user?.url} />}
 
 
 

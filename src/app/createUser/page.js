@@ -66,7 +66,7 @@ export default function create() {
                 }),
             });
         } catch (error) {
-            console.log(error);
+            setError("Error")
         }
         const res = await signIn("credentials", {
             email: user.email,
@@ -74,7 +74,6 @@ export default function create() {
             redirect: false,
         })
         if (res.error) {
-            console.log(res);
             setError("Error")
             setRegister(false)
             return

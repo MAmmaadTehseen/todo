@@ -34,7 +34,7 @@ export async function GET(req, res) {
         return NextResponse.json(fetchTodo)
     }
     catch (error) {
-        console.log("error fetching data")
+        return NextResponse.json("error fetching data")
     }
 
 

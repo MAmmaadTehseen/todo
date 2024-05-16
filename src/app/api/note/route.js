@@ -25,12 +25,11 @@ export async function GET(req, res) {
     try {
         const searchParams = req.nextUrl.searchParams
         const todoId = searchParams.get('id')
-        // console.log("getting note")
         const fetchTodo = await Note.find({ todoId: todoId }).sort({ createdAt: -1 });
         return NextResponse.json(fetchTodo)
     }
     catch (error) {
-        console.log("error fetching data")
+        return NextResponse.json("error fetching data")
     }
 
 

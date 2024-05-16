@@ -6,9 +6,9 @@ export async function POST(req) {
 
 
         let user = await req.json()
-        const salt = bcrypt.genSalt(10);
-        const hash = bcrypt.hash(password, salt)
-
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(user.password, salt)
+        console.log(hash)
 
         const createUser = await User.create({ name: user.name, email: user.email, password: hash, url: user.url })
         return NextResponse.json(createUser)
@@ -40,34 +40,27 @@ export async function GET(req, res) {
 }
 
 export async function PUT(req) {
-
     // requesting data from front-end
     const { id, ...user } = await req.json();
     const newUser = {}
-    console.log(user.password)
     if (user.name) { newUser.name = user.name }
+    if (user.email) { newUser.email = user.email }
     if (user.url) { newUser.url = user.url }
-    console.log(user.url)
-    if (user.password) {
 
-        const user = await User.findById(id);
-        const matchedpassword = await bcrypt.compare(user.check, user.password)
+    if (user.password) {
+        // newUser.password = password
+
+        const oldUser = await User.findById(id);
+        const matchedpassword = await bcrypt.compare(user.check, oldUser.password)
         if (!matchedpassword) {
             return NextResponse.json({ mes: "Wrong Password" }, {
                 status: 400,
             })
         }
-        const salt = bcrypt.genSalt(10);
-        const hash = bcrypt.hash(password, salt)
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(user.password, salt)
         newUser.password = hash
-
     }
-
-
-    let updatedUser = await User.findByIdAndUpdate(id, { $set: newUser })
-    return NextResponse.json(updatedUser, { status: 200 })
-
-
-
-
+    let todo = await User.findByIdAndUpdate(id, { $set: newUser })
+    return NextResponse.json(todo, { status: 200 })
 }

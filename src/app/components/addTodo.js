@@ -14,8 +14,8 @@ export default function addTodo({ task, id, onSubmit }) {
     const [todo, setTodo] = useState({
         title: "",
         description: "",
-        status: null,
-        priority: null,
+        status: "null",
+        priority: "null",
         expiry: 0,
     })
     const [date, setDate] = useState(`${new Date().getYear()}-${new Date().getMonth()}-${new Date().getDate()}`)
@@ -172,7 +172,7 @@ export default function addTodo({ task, id, onSubmit }) {
             setLoading(false)
             close()
         } catch (error) {
-            console.log(error);
+            setError("Error")
         }
 
 
@@ -294,7 +294,7 @@ export default function addTodo({ task, id, onSubmit }) {
                     {task == "Update" && <div className="relative border-t-4 border-dotted border-gray-600 m-2">
                         <h1 className="inline font-bold text-pretty border-b-4 border-double border-stone-600 text-lg">Notes</h1>
                         <div className="my-2">
-                            <textarea rows={1} value={note} onChange={(e) => { setNote(e.target.value) }} className=" rounded-md border border-gray-400 py-1.5 text-gray-900 " placeholder=" Add your Note" />
+                            <textarea rows={1} value={note ? note : ""} onChange={(e) => { setNote(e.target.value) }} className=" rounded-md border border-gray-400 py-1.5 text-gray-900 " placeholder=" Add your Note" />
                         </div>
                         {errorNote && <div className=" border border-red-600 rounded-md w-fit mt-1    px-3">{errorNote}</div>}
                         <LoadingButton loading={loadingAdd} disabled={loadingAdd} color='primary' variant='contained' className='absolute top-8 right-0 border rounded-md w-fit p-1 m-1' onClick={addNote} >Add Note</LoadingButton>
