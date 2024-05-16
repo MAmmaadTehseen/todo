@@ -6,7 +6,7 @@ import React, { useState } from 'react'
 import DeleteNote from './Dialouge'
 import { Modal } from 'antd'
 
-export default function note({ note, id, date, fetchdata }) {
+export default function note({ note, id, date, getSingleTodoData }) {
     const [openMainNote, setOpenMainNote] = useState(true)
     const [openUpdateNote, setOpenUpdateNote] = useState(false)
     const [note2, setNote2] = useState(note)
@@ -22,7 +22,7 @@ export default function note({ note, id, date, fetchdata }) {
                 'id': id
             })
         })
-        fetchdata()
+        getSingleTodoData()
     }
     const handleUpdate = () => {
         setOpenMainNote(false)
@@ -44,7 +44,7 @@ export default function note({ note, id, date, fetchdata }) {
 
             }),
         });
-        fetchdata()
+        getSingleTodoData()
         setOpenMainNote(true)
         setNoteUpdate(false)
         setOpenUpdateNote(false)
@@ -67,8 +67,8 @@ export default function note({ note, id, date, fetchdata }) {
                             <FontAwesomeIcon style={{ fontSize: "15px" }} icon={faTrashCan}></FontAwesomeIcon>
                         </button>
 
-                        <Modal centered open={isDeleteOpen} onCancel={() => setIsOpen(false)} footer={null} maskClosable={false} mask={true}  >
-                            <DeleteNote id={id} task={"Note"} deleteTodo={deleteNote} Deleted={() => { }} isDeleteOpen={isDeleteOpen} setIsOpenDelete={setIsDeleteOpen} />
+                        <Modal centered open={isDeleteOpen} onCancel={() => setIsDeleteOpen(false)} footer={null} maskClosable={false} mask={true} closeIcon={false} width={"fit_content"} >
+                            <DeleteNote id={id} task={"Note"} deleteTodo={deleteNote} Deleted={() => { }} isDeleteOpen={isDeleteOpen} setIsDeleteOpen={setIsDeleteOpen} />
                         </Modal>
 
 

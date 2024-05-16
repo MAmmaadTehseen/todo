@@ -5,6 +5,7 @@ import { AvatarComponent } from 'avatar-initials';
 import { useEffect, useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import Link from "next/link";
+import { Avatar } from "antd";
 
 
 
@@ -15,21 +16,21 @@ export default function navbar() {
     const [namesInitial, setNamesInitial] = useState("AM")
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(false)
+    async function getSingleUserData() {
 
+
+        const url = `/api/singleUser/?id=${session?.user?.id}`
+        const res = await fetch(url, { cache: "no-cache" });
+        if (res.ok) {
+
+            setUser(await res.json());
+
+
+        }
+    }
     useEffect(() => {
         let name = (session?.user?.name)
-        async function getSingleUserData() {
 
-
-            const url = `/api/singleUser/?id=${session?.user?.id}`
-            const res = await fetch(url, { cache: "no-cache" });
-            if (res.ok) {
-
-                setUser(await res.json());
-
-
-            }
-        }
 
         if (session) {
             getSingleUserData()
@@ -41,9 +42,9 @@ export default function navbar() {
     }, [session])
 
 
-    const signOut = () => {
+    const signout = () => {
         setLoading(true)
-        signOut()
+        signOut()//nextauth signOut function
     }
 
 
@@ -74,23 +75,11 @@ export default function navbar() {
                                 <button type="button" onClick={handleUmenu} className="m-3 relative flex rounded-full bg-blue-500 text-sm focus:outline-none " >
                                     <span className="absolute -inset-1.5"></span>
                                     <span className="sr-only">Open user menu</span>
-                                    <div className=" flex justify-center">
-                                        {user && <AvatarComponent
-                                            classes="rounded-full"
-                                            useGravatar={false}
-                                            size={44}
-                                            // primarySource={user?.url}
-                                            color="#000000"
-                                            background="#BFCA98"
-                                            fontSize={22}
+                                    <div className=" flex justify-center border-white">
+                                        {user?.url == "" && <Avatar size={60}>{namesInitial}</Avatar>
+                                        }
 
-
-                                            fontWeight={400}
-                                            offsetY={24}
-                                            namesInitial={namesInitial.toUpperCase()}
-                                        />}
-
-                                        {user?.url && <Image className="border rounded-full" src={user.url} fill={true} alt="profile photo" />}
+                                        {user?.url && <Avatar size={60} src={user.url} />}
 
 
 
@@ -121,7 +110,7 @@ export default function navbar() {
                                 <hr />
 
                                 <Link href={""} className="block  py-2 px-1 text-sm text-gray-700">
-                                    <LoadingButton onClick={() => signOut()} type="submit" className="block  py-2 text-sm text-gray-700"
+                                    <LoadingButton onClick={() => signout()} type="submit" className="block  py-2 text-sm text-gray-700"
                                         loading={loading}
 
                                     >

@@ -81,19 +81,19 @@ export default function item({ data, setMessage, setSortingElement, setSortingOr
 
     return (
         <>
-            <Table dataSource={data} pagination={false} className="-z-50 " loading={loading} >
+            <Table dataSource={data} pagination={false} className="-z-50 " loading={loading} rowKey={obj => obj._id} >
 
-                <Column title="Title" dataIndex="title" key="title" sorter={(a, b, order = "abc") => { setSortingElement("title"); sort(order); }} render={(title) => (
+                <Column title="Title" dataIndex="title" sorter={(a, b, order = "abc") => { setSortingElement("title"); sort(order); }} render={(title) => (
                     <div className=" text-base  font-medium">
                         {title.length > 20 ? `${title.slice(0, 20)} ....` : title}
                     </div>
                 )} />
-                <Column title="Description" dataIndex="description" key="description" render={(description) => (
+                <Column title="Description" dataIndex="description" render={(description) => (
                     <>
                         {description.length > 40 ? `${description.slice(0, 40)} ....` : description}
                     </>
                 )} />
-                <Column title="Expiry" dataIndex="expiry" key="expiry" sorter={(a, b, order) => { setSortingElement("expiry"); sort(order); }} render={(expiry) => (
+                <Column title="Expiry" dataIndex="expiry" sorter={(a, b, order) => { setSortingElement("expiry"); sort(order); }} render={(expiry) => (
                     <>
                         {`${expiry} days remaing`}
                     </>
@@ -101,7 +101,6 @@ export default function item({ data, setMessage, setSortingElement, setSortingOr
                 <Column
                     title="Status"
                     dataIndex="status"
-                    key="status"
                     sorter={(a, b, order) => { setSortingElement("status"); sort(order); }}
 
                     render={(status) => (
@@ -119,7 +118,6 @@ export default function item({ data, setMessage, setSortingElement, setSortingOr
                 <Column
                     title="priority"
                     dataIndex="priority"
-                    key="priority"
                     sorter={(a, b, order) => { setSortingElement("priority"); sort(order); }}
                     render={(priority) => (
 
@@ -134,7 +132,6 @@ export default function item({ data, setMessage, setSortingElement, setSortingOr
                 <Column
                     title="Action"
                     dataIndex={""}
-                    key="action"
 
                     render={(_, record) => (
                         <div className="flex justify-around">
@@ -169,7 +166,7 @@ export default function item({ data, setMessage, setSortingElement, setSortingOr
                 <AddTodo task={"Update"} id={id} onSubmit={handleSubmit} />
 
             </Modal>
-            <Modal open={isDeleteOpen} onCancel={() => setIsDeleteOpen(false)} footer={null} maskClosable={false} mask={true} centered destroyOnClose   >
+            <Modal open={isDeleteOpen} onCancel={() => setIsDeleteOpen(false)} closeIcon={false} width={"fit_content"} footer={null} maskClosable={false} mask={true} centered destroyOnClose   >
                 <DeleteTodo task={"Todo"} id={id} Deleted={Deleted} deleteTodo={deleteTodo} isDeleteOpen={isDeleteOpen} setIsDeleteOpen={setIsDeleteOpen} />
 
             </Modal>

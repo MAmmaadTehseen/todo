@@ -9,9 +9,8 @@ export async function POST(req) {
 
 
 
-        let { title, description, status, priority, expiry, userId } = req.json()
-
-        const createTodo = await Todo.create({ userId, title, description, status, priority, expiry })
+        const todo = await req.json()
+        const createTodo = await Todo.create({ userId: todo.userId, title: todo.title, description: todo.description, status: todo.status, priority: todo.priority, expiry: todo.expiry })
         return NextResponse.json(createTodo)
     }
     catch (error) {
@@ -45,20 +44,19 @@ export async function GET(req, res) {
 
 export async function PUT(req) {
 
-    // requesting data from front-end
-    const { title, description, status, priority, expiry, id, isDeleted } = await req.json();
+    const { id, ...todo } = await req.json()
     const newTodo = {}
-    if (title) { newTodo.title = title }
-    if (description) { newTodo.description = description }
-    if (status) { newTodo.status = status }
-    if (priority) { newTodo.priority = priority }
-    if (expiry) { newTodo.expiry = expiry }
-    if (isDeleted) { newTodo.isDeleted = isDeleted }
+    if (todo.title) { newTodo.title = todo.title }
+    if (todo.description) { newTodo.description = todo.description }
+    if (todo.status) { newTodo.status = todo.status }
+    if (todo.priority) { newTodo.priority = todo.priority }
+    if (todo.expiry) { newTodo.expiry = todo.expiry }
+    if (todo.isDeleted) { newTodo.isDeleted = todo.isDeleted }
 
 
 
-    let todo = await Todo.findByIdAndUpdate(id, { $set: newTodo })
-    return NextResponse.json(todo)
+    let updatedTodo = await Todo.findByIdAndUpdate(id, { $set: newTodo })
+    return NextResponse.json(updatedTodo)
 
 
 

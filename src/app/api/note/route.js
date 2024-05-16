@@ -8,9 +8,9 @@ export async function POST(req) {
 
 
 
-        let { description, todoId } = req.json()
+        let note = await req.json()
 
-        const createNote = await Note.create({ description, todoId })
+        const createNote = await Note.create({ description: note.description, todoId: note.todoId })
         return NextResponse.json(createNote)
     }
     catch (error) {
@@ -41,16 +41,16 @@ export async function GET(req, res) {
 export async function PUT(req) {
 
     // requesting data from front-end
-    const { description, id } = await req.json();
+    const { id, ...note } = await req.json();
     const newNote = {}
 
-    if (description) { newNote.description = description }
+    if (note.description) { newNote.description = note.description }
 
 
 
 
-    let note = await Note.findByIdAndUpdate(id, { $set: newNote })
-    return NextResponse.json(note)
+    let updatedNote = await Note.findByIdAndUpdate(id, { $set: newNote })
+    return NextResponse.json(updatedNote)
 
 
 
@@ -58,12 +58,12 @@ export async function PUT(req) {
 }
 
 export async function DELETE(req) {
-    // requesting data from the front-end
     const { id } = await req.json();
 
-    // creating a db client
+
     try {
         if (id) {
+
 
             // deleting note based on its id
             const res = await Note.findByIdAndDelete(id);

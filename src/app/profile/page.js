@@ -1,12 +1,10 @@
 "use client"
 import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react";
-import { AvatarComponent } from 'avatar-initials';
 import GetImage from "../components/GetImage";
-import Image from "next/image";
 import { Button } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { Modal } from "antd";
+import { Avatar, Modal } from "antd";
 
 
 
@@ -16,9 +14,6 @@ export default function profile() {
     const { data: session } = useSession()
 
     const [loading, setLoading] = useState(false);
-    // const [name, setName] = useState("")
-    // const [email, setEmail] = useState("")
-    // const [url, setUrl] = useState("")
     const [password, setPassword] = useState("")
     const [newPassword, setNewPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
@@ -39,40 +34,40 @@ export default function profile() {
     const handleSubmit = () => {
         setIsOpen(false);
         setError("Image updated")
+        getUserData()
 
     };
-    useEffect(() => {
-        let inint = (session?.user?.name)
-        async function fetchdata() {
+    // useEffect(() => {
+    //     let inint = (session?.user?.name)
+    //     async function getUserData() {
 
-            // setEmail(user?.email)
-            // setUser(user => ({ ...user, name:user?.name }))
-            // setUrl(user?.url)
-        }
+
+    //     }
+
+    //     if (session) {
+    //         getUserData()
+    //         inint = inint.split(" ")
+    //         setUserNameInitials(`${inint[1][0]}${inint[2][0]}`)
+
+    //     }
+
+    // }, [user])
+    async function getUserData() {
+
+
+        const url = `/api/singleUser/?id=${session?.user?.id}`
+        const res = await fetch(url, { cache: "no-cache" });
+        if (res.ok) { setUser(await res.json()); }
+
+
+
+
+    }
+    useEffect(() => {
+
 
         if (session) {
-            fetchdata()
-            inint = inint.split(" ")
-            setUserNameInitials(`${inint[0][0]}${inint[1][0]}`)
-
-        }
-
-    }, [user])
-    useEffect(() => {
-
-        async function fetchdata() {
-
-
-            const url = `/api/singleUser/?id=${session?.user?.id}`
-            const res = await fetch(url, { cache: "no-cache" });
-            if (res.ok) { setUser(await res.json()); }
-
-
-
-
-        }
-        if (session) {
-            fetchdata()
+            getUserData()
 
         }
 
@@ -134,42 +129,26 @@ export default function profile() {
 
         setClicked(false)
 
+
     }
     const changePassword = (e) => {
         e.preventDefault()
         clicked ? setClicked(false) : setClicked(true)
     }
-    const customStyles = {
-        overlay: {
-            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-            alignItems: "center"
-        },
-        content: {
-            // backgroundColor: 'rgba(0, 0, 0, 0.7)'
-            backgroundColor: "white",
-            width: "fit-content",
-            height: "fit-content",
-            display: "",
-            top: "30%",
-            left: "40%",
-            border: "3px solid blue",
-            borderRadius: "30px"
 
-        }
-    }
 
     return (
         <>
             {user &&
                 <div>
 
-                    <div className="flex flex-row justify-center mt-20">
+                    <div className="flex flex-row justify-center mt-24">
 
 
-                        <h1 className="font-bold text-2xl">
+                        <h1 className="font-bold  mr-2 text-2xl">
                             Welcome
                         </h1>
-                        <h2 className="font-serif text-2xl text-blue-700"> {user.name}</h2>
+                        <h2 className="font-serif text-2xl text-blue-700"> {" " + user.name}</h2>
 
                     </div>
                     <div className="flex justify-center">
@@ -179,25 +158,12 @@ export default function profile() {
                                 <div className="flex justify-center">
                                     {user.name != "" &&
                                         <div className="relative h-20 w-20 justify-center">
-                                            <AvatarComponent
-                                                classes="rounded-full"
-                                                useGravatar={false}
-                                                size={120}
-                                                // primarySource={user?.url}
-                                                color="#000000"
-                                                background="#BFCA98"
-                                                fontSize={60}
+                                            {user.url == "" && <Avatar size={80}>{userNameInitials}</Avatar>}
 
 
-                                                fontWeight={400}
-                                                offsetY={60}
-                                                initials={userNameInitials.toUpperCase()}
-                                            />
+                                            {user?.url && <Avatar size={80} src={user.url}  ></Avatar>}
 
-
-                                            {user?.url && <Image className="border rounded-full" src={user.url} fill={true} alt="profile photo" />}
-
-                                            <div className="m-2">
+                                            <div className="my-2">
                                                 <Button color="success" variant="contained" className="m-2" onClick={() => setIsOpen(true)}>Edit</Button>
                                                 <Modal open={isOpen} onCancel={() => setIsOpen(false)} destroyOnClose footer={null} maskClosable={false} >
                                                     <GetImage onSubmit={handleSubmit} />

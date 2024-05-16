@@ -50,9 +50,9 @@ export default function addTodo({ task, id, onSubmit }) {
         await res.json().then((res) => {
 
             setDisable(false)
-            setTodo(res[0])
+            setTodo(res)
             var tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + res[0].expiry);
+            tomorrow.setDate(tomorrow.getDate() + res.expiry);
 
             let day = tomorrow.getDate()
             let month = tomorrow.getMonth() + 1
@@ -63,7 +63,7 @@ export default function addTodo({ task, id, onSubmit }) {
             }
 
 
-            setNotes(res[0].notes)
+            setNotes(res.notes)
 
             setLoadingData(false)
         })
@@ -85,15 +85,7 @@ export default function addTodo({ task, id, onSubmit }) {
         }
 
 
-        // if (task === "Update") {
-        //     setDisable(true)
-        //     setLoadingData(true)
 
-        //     getSingleTodoData()
-
-
-
-        // }
     }, [])
 
 
@@ -238,13 +230,13 @@ export default function addTodo({ task, id, onSubmit }) {
                             <div>
                                 <label className="block text-lg font-medium  text-gray-900">Title</label>
                                 <div className="my-2">
-                                    <input value={todo.title} onChange={(e) => { setTodo(todo => ({ ...todo, title: e.target.value })) }} className="w-full rounded-md border border-gray-400 py-1.5 text-gray-900 " placeholder=" Title" />
+                                    <input value={todo.title ? todo.title : ""} onChange={(e) => { setTodo(todo => ({ ...todo, title: e.target.value })) }} className="w-full rounded-md border border-gray-400 py-1.5 text-gray-900 " placeholder=" Title" />
                                 </div>
                             </div>
                             <div>
                                 <label className="block text-lg font-medium  text-gray-900">Description</label>
                                 <div className="my-2">
-                                    <textarea value={todo.description} onChange={(e) => { setTodo(todo => ({ ...todo, description: e.target.value })) }} rows="3" className="w-full rounded-md border border-gray-400 py-1.5 text-gray-900 " placeholder=" Add a brief description of your task"></textarea>
+                                    <textarea value={todo.description ? todo.description : ""} onChange={(e) => { setTodo(todo => ({ ...todo, description: e.target.value })) }} rows="3" className="w-full rounded-md border border-gray-400 py-1.5 text-gray-900 " placeholder=" Add a brief description of your task"></textarea>
                                 </div>
                             </div>
 
@@ -254,8 +246,8 @@ export default function addTodo({ task, id, onSubmit }) {
 
                                     <label className=" mb-2 block  text-lg font-medium leading-6 text-gray-900">Status</label>
 
-                                    <select value={todo.status} onChange={(e) => { setTodo(todo => ({ ...todo, status: e.target.value })) }} className=" w-full rounded-md border border-gray-400 py-1.5 text-gray-900 bg-white ">
-                                        <option disabled selected > -- select an option -- </option>
+                                    <select value={todo.status ? todo.status : ""} onChange={(e) => { setTodo(todo => ({ ...todo, status: e.target.value })) }} className=" w-full rounded-md border border-gray-400 py-1.5 text-gray-900 bg-white ">
+                                        <option disabled value="" > -- select an option -- </option>
                                         <option value="Active">Active</option>
                                         <option value="Pending">Pending</option>
                                         <option value="Done">Done</option>
@@ -266,8 +258,8 @@ export default function addTodo({ task, id, onSubmit }) {
 
                                     <label forhtml="country" className="block mb-2 text-lg font-medium leading-6 text-gray-900">Priority</label>
 
-                                    <select value={todo.priority} onChange={(e) => { setTodo(todo => ({ ...todo, priority: e.target.value })) }} className="w-full rounded-md border border-gray-400 py-1.5 text-gray-900 bg-white ">
-                                        <option disabled selected value> -- select an option -- </option>
+                                    <select value={todo.priority ? todo.priority : ""} onChange={(e) => { setTodo(todo => ({ ...todo, priority: e.target.value })) }} className="w-full rounded-md border border-gray-400 py-1.5 text-gray-900 bg-white ">
+                                        <option disabled value=""> -- select an option -- </option>
                                         <option value="High">High</option>
                                         <option value="Medium">Medium</option>
                                         <option value="Low">Low</option>
@@ -306,7 +298,7 @@ export default function addTodo({ task, id, onSubmit }) {
                         </div>
                         {errorNote && <div className=" border border-red-600 rounded-md w-fit mt-1    px-3">{errorNote}</div>}
                         <LoadingButton loading={loadingAdd} disabled={loadingAdd} color='primary' variant='contained' className='absolute top-8 right-0 border rounded-md w-fit p-1 m-1' onClick={addNote} >Add Note</LoadingButton>
-                        {!loading && notes != [] && todo.description != "" && <div className="mt-4 mx-2">
+                        {notes != [] && todo.description != "" && <div className="mt-4 mx-2 flex flex-col-reverse">
                             {notes.map(blog => (
                                 <div key={blog._id}  >
 

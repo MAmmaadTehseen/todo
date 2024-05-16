@@ -17,6 +17,8 @@ export async function GET(req, res) {
                 }
             },
             { $match: { _id: new ObjectId(id) } },
+            { $sort: { "notes.createdAt": -1 } },
+            // { $unwind: "$notes" }
 
 
 
@@ -25,7 +27,7 @@ export async function GET(req, res) {
 
         ]).exec()
 
-        return NextResponse.json({ ...data })
+        return NextResponse.json(...data)
     }
     catch (error) {
         return NextResponse.json({ "Error": "Error fetching data" })
