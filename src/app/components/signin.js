@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 import { Button } from "antd";
 
 
-export default function item() {
+export default function signin() {
   const { data: session } = useSession();
   const [signInLoader, setSignInLoader] = useState(false);
   const [email, setEmail] = useState("");

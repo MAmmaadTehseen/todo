@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 
 
-export default function AlertDialogSlide({ setIsDeleteOpen, deleteTodo, Deleted, id, task }) {
+export default function alertDialogSlide({ setIsDeleteOpen, deleteTodo, Deleted, id, task }) {
   const [loading, setLoading] = useState(false)
 
   const handleAgree = async () => {

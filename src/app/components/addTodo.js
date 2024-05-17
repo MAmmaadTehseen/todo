@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import Note from "@src/app/components/Note";
+import Note from "./Note";
 import { Button, Spin } from 'antd';
 
 

@@ -7,9 +7,10 @@ import Message from '../components/Alert';
 import Skeleton from '../components/Skeleton';
 import { FloatButton, Modal, Pagination } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import { set } from "mongoose";
 
 
-export default function Home() {
+export default function dashboard() {
     const [isOpen, setIsOpen] = useState(false)
     const [message, setMessage] = useState("")
     const { data: session } = useSession()
@@ -20,8 +21,23 @@ export default function Home() {
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [sortingElement, setSortingElement] = useState("createdAt")
     const [sortingOrder, setSortingOrder] = useState("-1")
+    let a = 0;
+    let order = "-1";
+    let element = "createdAt";
 
+    let sort = (order1, element1) => {
+        a = a + 1;
+        order = order1 == "ascend" ? "1" : "-1";
+        element = element1
+        console.log(order, element, a)
+        // getAllTodoData()
 
+    }
+    useEffect(() => {
+        console.log("object")
+        // setSortingElement(element)
+        // setSortingOrder(order)
+    }, [a])
 
 
     useEffect(() => {
@@ -130,7 +146,7 @@ export default function Home() {
 
                         {todo &&
 
-                            < TodoItem data={todo} setMessage={setMessage} setSortingElement={setSortingElement} sortingOrder={sortingOrder} setSortingOrder={setSortingOrder} loading={TableLoading} setLoading={setTableLoading} getAllTodoData={getAllTodoData} className="mb-5" />
+                            < TodoItem data={todo} setMessage={setMessage} setSortingElement={setSortingElement} sortingOrder={sortingOrder} setSortingOrder={setSortingOrder} loading={TableLoading} sort={sort} setLoading={setTableLoading} getAllTodoData={getAllTodoData} className="mb-5" />
 
                         }
                     </div>}

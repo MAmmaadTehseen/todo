@@ -19,6 +19,7 @@ const userSchema = new Schema({
     },
     url: {
         type: String,
+        default: ""
 
     }
 },

@@ -11,7 +11,7 @@ import { ConfigProvider, Modal, Table, Tag } from 'antd';
 const { Column } = Table;
 
 
-export default function item({ data, setMessage, setSortingElement, setSortingOrder, loading, setLoading, getAllTodoData }) {
+export default function todoItem({ data, setMessage, setSortingElement, setSortingOrder, loading, setLoading, getAllTodoData }) {
 
     const [isOpen, setIsOpen] = useState(false)
     const [id, setId] = useState(false)
@@ -64,25 +64,18 @@ export default function item({ data, setMessage, setSortingElement, setSortingOr
         setIsOpen(true)
         setId(id)
     }
-
-
-    const sort = (order, element) => {
-        if (order == "ascend") {
-            setSortingOrder(1)
-            setSortingElement(element)
-        }
-        else {
-            setSortingOrder(-1)
-            setSortingElement(element)
-        }
-
+    const handleChange = (pagination, filters, sorter) => {
+        console.log({ pagination, filters, sorter })
+        setSortingElement(sorter.field)
+        setSortingOrder(sorter.order == "ascend" ? "1" : "-1")
     }
+
 
     return (
         <>
-            <Table dataSource={data} pagination={false} className="-z-50 " loading={loading} rowKey={obj => obj._id} >
+            <Table dataSource={data} pagination={false} className="-z-50 " loading={loading} on onChange={handleChange} rowKey={obj => obj._id} >
 
-                <Column title="Title" dataIndex="title" sorter={(a, b, order = "abc") => { sort(order, "title"); }} render={(title) => (
+                <Column title="Title" dataIndex="title" render={(title) => (
                     <div className=" text-base  font-medium">
                         {title.length > 20 ? `${title.slice(0, 20)} ....` : title}
                     </div>
@@ -92,7 +85,7 @@ export default function item({ data, setMessage, setSortingElement, setSortingOr
                         {description.length > 40 ? `${description.slice(0, 40)} ....` : description}
                     </>
                 )} />
-                <Column title="Expiry" dataIndex="expiry" sorter={(a, b, order) => { sort(order, "expiry"); }} render={(expiry) => (
+                <Column title="Expiry" dataIndex="expiry" render={(expiry) => (
                     <>
                         {`${expiry} days remaing`}
                     </>
@@ -100,7 +93,7 @@ export default function item({ data, setMessage, setSortingElement, setSortingOr
                 <Column
                     title="Status"
                     dataIndex="status"
-                    sorter={(a, b, order) => { sort(order, "status"); }}
+
 
                     render={(status) => (
 
@@ -117,7 +110,7 @@ export default function item({ data, setMessage, setSortingElement, setSortingOr
                 <Column
                     title="priority"
                     dataIndex="priority"
-                    sorter={(a, b, order) => { sort(order, "priority"); }}
+
                     render={(priority) => (
 
                         <Tag color={priority == 'High' ? "red" : priority == 'Low' ? "yellow" : "orange"}>

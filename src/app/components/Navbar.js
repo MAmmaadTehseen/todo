@@ -73,12 +73,10 @@ export default function navbar() {
 
                         <div className="relative z-50">
                             <div>
-                                <button type="primary" onClick={handleUmenu} className="m-3 relative flex rounded-full bg-blue-500 text-sm focus:outline-none " >
-                                    <span className="absolute -inset-1.5"></span>
-                                    <span className="sr-only">Open user menu</span>
+                                <button type="primary" onClick={handleUmenu} className="m-3  flex  " >
+
                                     <div className=" flex justify-center border-white">
-                                        {!user?.url && <Avatar size={60}>{namesInitial.toUpperCase()}</Avatar>
-                                        }
+                                        {user?.url == "" && <Avatar size={60}>{namesInitial.toUpperCase()}</Avatar>}
 
                                         {user?.url && <Avatar size={60} src={user?.url} />}
 
