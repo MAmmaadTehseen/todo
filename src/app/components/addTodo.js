@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import Note from "./Note";
+import Note from "@src/app/components/Note";
 import { Button, Spin } from 'antd';
 
 
@@ -280,7 +280,7 @@ export default function addTodo({ task, id, onSubmit }) {
                                 <Button type="primary" disabled={disable} loading={loading} onClick={createTodo}>
                                     {task}
                                 </Button>
-                            
+
                             </div>
 
                         </div>
