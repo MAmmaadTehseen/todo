@@ -1,9 +1,8 @@
 "use client"
-import { LoadingButton } from '@mui/lab';
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Note from "./Note";
-import { Spin } from 'antd';
+import { Button, Spin } from 'antd';
 
 
 
@@ -14,8 +13,8 @@ export default function addTodo({ task, id, onSubmit }) {
     const [todo, setTodo] = useState({
         title: "",
         description: "",
-        status: "null",
-        priority: "null",
+        status: "",
+        priority: "",
         expiry: 0,
     })
     const [date, setDate] = useState(`${new Date().getYear()}-${new Date().getMonth()}-${new Date().getDate()}`)
@@ -278,13 +277,10 @@ export default function addTodo({ task, id, onSubmit }) {
                             <div>
 
 
-
-                                <LoadingButton color={disable ? "secondary" : "primary"} variant="contained" onClick={createTodo} type="submit"
-
-                                    loading={loading}
-                                    disabled={disable}
-                                >{task}
-                                </LoadingButton>
+                                <Button type="primary" disabled={disable} loading={loading} onClick={createTodo}>
+                                    {task}
+                                </Button>
+                            
                             </div>
 
                         </div>
@@ -297,7 +293,7 @@ export default function addTodo({ task, id, onSubmit }) {
                             <textarea rows={1} value={note ? note : ""} onChange={(e) => { setNote(e.target.value) }} className=" rounded-md border border-gray-400 py-1.5 text-gray-900 " placeholder=" Add your Note" />
                         </div>
                         {errorNote && <div className=" border border-red-600 rounded-md w-fit mt-1    px-3">{errorNote}</div>}
-                        <LoadingButton loading={loadingAdd} disabled={loadingAdd} color='primary' variant='contained' className='absolute top-8 right-0 border rounded-md w-fit p-1 m-1' onClick={addNote} >Add Note</LoadingButton>
+                        <Button loading={loadingAdd} disabled={loadingAdd} type='primary' className='absolute top-8 right-0 ' onClick={addNote} >Add Note</Button>
                         {notes != [] && todo.description != "" && <div className="mt-4 mx-2 flex flex-col-reverse">
                             {notes.map(blog => (
                                 <div key={blog._id}  >

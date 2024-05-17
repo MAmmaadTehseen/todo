@@ -1,20 +1,18 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
-import { LoadingButton } from "@mui/lab";
 import Image from "next/image";
+import { Button } from "antd";
 
 
 export default function getImage({ onSubmit }) {
     const { data: session } = useSession()
     const [imageUrl, setImageUrl] = useState("")
     const [image, setImage] = useState("")
-    const [disable, setDisable] = useState(false)
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
 
 
     const imageSumbition = (e) => {
-        setDisable(true)
         const file = e.target.files[0];
         var reader = new FileReader();
         reader.onloadend = function () {
@@ -23,7 +21,6 @@ export default function getImage({ onSubmit }) {
 
         }
         reader.readAsDataURL(file);
-        setDisable(false)
 
 
     }
@@ -68,12 +65,11 @@ export default function getImage({ onSubmit }) {
                     <label className="m-3 font-bold" htmlFor="image" >Add image</label>
                     <input className="m-3" type="file" onChange={imageSumbition} id="fileupload" name="image" />
                     {error && <div className="bg-red-300 border border-red-600 rounded-md w-fit px-3">{error}</div>}
-                    <LoadingButton onClick={uploadImage} type="submit" color="success" variant="contained" className={`border m-3 flex w-16 p-2 rounded-md`}
+                    <Button onClick={uploadImage} type="primary" className={`max-w-fit    `}
                         loading={loading}
 
-                    >
-                        Upload
-                    </LoadingButton>
+                    >Upload
+                    </Button>
 
                 </div>
                 <div >{image && <Image src={image} height={100} width={100} alt="" />}</div>

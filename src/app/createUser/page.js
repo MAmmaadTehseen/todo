@@ -4,7 +4,7 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { LoadingButton } from "@mui/lab";
+import { Button } from "antd";
 
 
 
@@ -131,17 +131,15 @@ export default function create() {
                             </div>}
                             <div>
 
-                                <LoadingButton onClick={createUser}
-                                    type="submit"
-                                    className="bg-indigo-500"
-                                    color="success"
-                                    variant="contained"
+                                <Button onClick={createUser}
+                                    type="primary"
+
                                     loading={register}
 
 
                                 >
                                     Register
-                                </LoadingButton>
+                                </Button>
                             </div>
                         </form>
 

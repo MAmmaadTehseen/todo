@@ -5,8 +5,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import Message from '../components/Alert';
 import Skeleton from '../components/Skeleton';
-import TablePagination from '@mui/material/TablePagination';
-import { FloatButton, Modal } from 'antd';
+import { FloatButton, Modal, Pagination } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
 
@@ -15,19 +14,12 @@ export default function Home() {
     const [message, setMessage] = useState("")
     const { data: session } = useSession()
     const [todo, setTodo] = useState()
-    const [page, setPage] = useState(0)
+    const [page, setPage] = useState(1)
     const [totalTodo, setTotalTodo] = useState()
     const [TableLoading, setTableLoading] = useState(false)
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [sortingElement, setSortingElement] = useState("createdAt")
     const [sortingOrder, setSortingOrder] = useState("-1")
-    // useEffect(() => {
-    //     if (session) {
-    //         getAllTodoData()
-
-    //     }
-
-    // }, [])
 
 
 
@@ -42,20 +34,15 @@ export default function Home() {
     }
     async function getAllTodoData() {
 
-        setTableLoading(true)
 
-        const url = `/api/todo/?id=${session?.user?.id}&limit=${rowsPerPage}&page=${page}&sortingElement=${sortingElement}&sortingOrder=${sortingOrder}`
+        const url = `/api/todo/?id=${session?.user?.id}&limit=${rowsPerPage}&page=${page - 1}&sortingElement=${sortingElement}&sortingOrder=${sortingOrder}`
+        const total = await fetch(`/api/totalTodo?id=${session?.user?.id} `, { cache: "no-cache" })
+        setTotalTodo(await total.json())
         const res = await fetch(url, { cache: "no-cache" });
+        setTodo(await res.json());
+        setTableLoading(false)
 
-        if (res.ok) {
 
-
-            const total = await fetch(`/api/totalTodo?id=${session?.user?.id} `, { cache: "no-cache" })
-            setTotalTodo(await total.json())
-            setTodo(await res.json());
-            setTableLoading(false)
-
-        }
 
 
 
@@ -65,30 +52,31 @@ export default function Home() {
 
 
         if (session) {
+            setTableLoading(true)
             getAllTodoData()
 
         }
 
     }, [sortingOrder, sortingElement, page, rowsPerPage, session])
 
-    const handlePage = async (e, newPage) => {
-
-        await setPage(newPage);
 
 
 
+    const handlePage = async (page, pageSize) => {
 
-    };
-    const handleChangeRowsPerPage = async (event) => {
-        setRowsPerPage(parseInt(event.target.value));
-        setPage(0);
+        await setPage(page);
+        setRowsPerPage(pageSize)
+        setTableLoading(true)
+
 
 
 
     };
+
 
     const handleSubmit = () => {
         setMessage("Added todo succesfully")
+        setTableLoading(true)
         getAllTodoData()
         setIsOpen(false);
         return
@@ -147,15 +135,14 @@ export default function Home() {
                         }
                     </div>}
                     {todo && <div className='fixed  bottom-0 left-0 right-0 bg-white z-50'>
-                        <div className='flex justify-center'>
-                            <TablePagination
-                                component="div"
-                                count={totalTodo}
-                                page={page}
-                                onPageChange={handlePage}
-                                rowsPerPage={rowsPerPage}
-                                onRowsPerPageChange={handleChangeRowsPerPage}
-                                rowsPerPageOptions={[5, 10, 20, 50, 75, 100]}
+                        <div className='flex justify-center p-3'>
+
+                            <Pagination
+                                total={totalTodo}
+                                showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+                                PageSize={rowsPerPage}
+                                onChange={handlePage}
+                                Current={page}
                             />
                         </div>
                     </div>}

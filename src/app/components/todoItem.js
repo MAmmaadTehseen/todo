@@ -1,8 +1,10 @@
 "use client"
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    EditOutlined,
+    DeleteOutlined
+} from '@ant-design/icons';
 import AddTodo from "./addTodo"
-import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import DeleteTodo from "../components/Dialouge"
 import { ConfigProvider, Modal, Table, Tag } from 'antd';
@@ -64,26 +66,23 @@ export default function item({ data, setMessage, setSortingElement, setSortingOr
     }
 
 
-    const sort = (order) => {
+    const sort = (order, element) => {
         if (order == "ascend") {
             setSortingOrder(1)
-
-        }
-        else if (order == "descend") {
-            setSortingOrder(-1)
-
+            setSortingElement(element)
         }
         else {
-            setSortingOrder(1)
-            setSortingElement("createdAt")
+            setSortingOrder(-1)
+            setSortingElement(element)
         }
+
     }
 
     return (
         <>
             <Table dataSource={data} pagination={false} className="-z-50 " loading={loading} rowKey={obj => obj._id} >
 
-                <Column title="Title" dataIndex="title" sorter={(a, b, order = "abc") => { setSortingElement("title"); sort(order); }} render={(title) => (
+                <Column title="Title" dataIndex="title" sorter={(a, b, order = "abc") => { sort(order, "title"); }} render={(title) => (
                     <div className=" text-base  font-medium">
                         {title.length > 20 ? `${title.slice(0, 20)} ....` : title}
                     </div>
@@ -93,7 +92,7 @@ export default function item({ data, setMessage, setSortingElement, setSortingOr
                         {description.length > 40 ? `${description.slice(0, 40)} ....` : description}
                     </>
                 )} />
-                <Column title="Expiry" dataIndex="expiry" sorter={(a, b, order) => { setSortingElement("expiry"); sort(order); }} render={(expiry) => (
+                <Column title="Expiry" dataIndex="expiry" sorter={(a, b, order) => { sort(order, "expiry"); }} render={(expiry) => (
                     <>
                         {`${expiry} days remaing`}
                     </>
@@ -101,7 +100,7 @@ export default function item({ data, setMessage, setSortingElement, setSortingOr
                 <Column
                     title="Status"
                     dataIndex="status"
-                    sorter={(a, b, order) => { setSortingElement("status"); sort(order); }}
+                    sorter={(a, b, order) => { sort(order, "status"); }}
 
                     render={(status) => (
 
@@ -118,7 +117,7 @@ export default function item({ data, setMessage, setSortingElement, setSortingOr
                 <Column
                     title="priority"
                     dataIndex="priority"
-                    sorter={(x, y, order) => { setSortingElement("priority"); sort(order); }}
+                    sorter={(a, b, order) => { sort(order, "priority"); }}
                     render={(priority) => (
 
                         <Tag color={priority == 'High' ? "red" : priority == 'Low' ? "yellow" : "orange"}>
@@ -147,11 +146,11 @@ export default function item({ data, setMessage, setSortingElement, setSortingOr
                                     },
                                 }}
                             >
-                                <button className="mx-1" onClick={() => { idUpdate(record._id) }}><FontAwesomeIcon style={{ fontSize: "25px" }} icon={faPenToSquare}></FontAwesomeIcon></button>
+                                <button className="mx-1" onClick={() => { idUpdate(record._id) }}><EditOutlined style={{ fontSize: "25px" }} /></button>
 
 
 
-                                <button className="mx-1" onClick={() => { idDelete(record._id) }}><FontAwesomeIcon style={{ fontSize: "25px" }} icon={faTrashCan}></FontAwesomeIcon></button>
+                                <button className="mx-1" onClick={() => { idDelete(record._id) }}><DeleteOutlined style={{ fontSize: "25px" }} /></button>
 
 
                             </ConfigProvider>

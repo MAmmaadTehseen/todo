@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { LoadingButton } from "@mui/lab";
+import { Button } from "antd";
 
 
 export default function item() {
@@ -91,11 +91,9 @@ export default function item() {
             }
 
             <div>
-              <LoadingButton color="success" variant="contained" onClick={handleSubmit} type="submit" className="bg-indigo-500"
-                loading={signInLoader}>
-
+              <Button type="primary" onClick={handleSubmit} loading={signInLoader}>
                 Sign in
-              </LoadingButton>
+              </Button>
             </div>
 
 

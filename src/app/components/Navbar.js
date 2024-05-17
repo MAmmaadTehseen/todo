@@ -1,11 +1,8 @@
 "use client"
-import Image from "next/image";
 import { signOut, useSession } from "next-auth/react";
-import { AvatarComponent } from 'avatar-initials';
 import { useEffect, useState } from "react";
-import { LoadingButton } from "@mui/lab";
 import Link from "next/link";
-import { Avatar } from "antd";
+import { Avatar, Button } from "antd";
 
 
 
@@ -14,7 +11,11 @@ export default function navbar() {
     const [umenu, setUmenu] = useState("hidden");
     let { data: session } = useSession();
     const [namesInitial, setNamesInitial] = useState("AM")
-    const [user, setUser] = useState()
+    const [user, setUser] = useState({
+        name: "",
+        email: "",
+        password: ""
+    })
     const [loading, setLoading] = useState(false)
     async function getSingleUserData() {
 
@@ -34,9 +35,9 @@ export default function navbar() {
 
         if (session) {
             getSingleUserData()
-            name = name.split(" ")
-            setNamesInitial(`${name[1][0]}${name[2][0]}`)
 
+            name = name.split(" ").filter((res) => res.length > 0)
+            setNamesInitial(`${name[0][0]}${name[1][0]}`)
         }
 
     }, [session])
@@ -68,54 +69,50 @@ export default function navbar() {
             <div className="flex ">
 
                 {user &&
-                    <div className="flex justify-center text-center">
+                    <div className="flex justify-center text-center mr-2">
 
                         <div className="relative z-50">
                             <div>
-                                <button type="button" onClick={handleUmenu} className="m-3 relative flex rounded-full bg-blue-500 text-sm focus:outline-none " >
+                                <button type="primary" onClick={handleUmenu} className="m-3 relative flex rounded-full bg-blue-500 text-sm focus:outline-none " >
                                     <span className="absolute -inset-1.5"></span>
                                     <span className="sr-only">Open user menu</span>
                                     <div className=" flex justify-center border-white">
-                                        {user?.url == "" && <Avatar size={60}>{namesInitial.toUpperCase()}</Avatar>
+                                        {!user?.url && <Avatar size={60}>{namesInitial.toUpperCase()}</Avatar>
                                         }
 
-                                        {user?.url != "" && <Avatar size={60} src={user?.url} />}
+                                        {user?.url && <Avatar size={60} src={user?.url} />}
 
 
 
                                     </div>
                                 </button>
                             </div>
-                            <div className={`absolute ${umenu} right-0 border border-gray-300 z-10 mt-2 w-28 origin-top-right rounded-md bg-white  shadow-lg ring-1 ring-black ring-opacity-5 `} >
+                            <div className={`absolute ${umenu} right-0 border border-gray-300 z-10 w-28 origin-top-right rounded-md bg-white  shadow-lg ring-1 ring-black ring-opacity-5 `} >
 
 
-                                <Link href={"/dashboard"} onClick={() => setUmenu("hidden")} className="block px-1 py-2 text-sm text-gray-700">
-                                    <LoadingButton className="block  py-2 text-sm text-gray-700">
+                                <Link href={"/dashboard"} className="block px-1 py-2 text-sm text-gray-700">
+                                    <Button onClick={() => setUmenu("hidden")} type="submit" className="block  py-2 text-sm text-gray-700">
 
                                         Dashboard
-                                    </LoadingButton>
+                                    </Button>
 
                                 </Link>
 
                                 <hr />
 
-                                <Link href={"/profile"} onClick={() => setUmenu("hidden")} className="block px-1 py-2 text-sm text-gray-700">
-                                    <LoadingButton className="block  py-2 text-sm text-gray-700">
-
+                                <Link href={"/profile"} className="block  py-2 px-1 text-sm text-gray-700">
+                                    <Button onClick={() => setUmenu("hidden")} type="submit" className="block  py-2 text-sm text-gray-700">
                                         Profile
-                                    </LoadingButton>
+                                    </Button>
 
                                 </Link>
 
                                 <hr />
 
                                 <Link href={""} className="block  py-2 px-1 text-sm text-gray-700">
-                                    <LoadingButton onClick={() => signout()} type="submit" className="block  py-2 text-sm text-gray-700"
-                                        loading={loading}
-
-                                    >
+                                    <Button onClick={() => signout()} type="submit" className="block  py-2 text-sm text-gray-700" loading={loading}>
                                         Sign Out
-                                    </LoadingButton>
+                                    </Button>
                                 </Link>
                             </div>
                         </div>

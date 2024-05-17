@@ -18,7 +18,6 @@ export async function GET(req, res) {
             },
             { $match: { _id: new ObjectId(id) } },
             { $sort: { "notes.createdAt": -1 } },
-            // { $unwind: "$notes" }
 
 
 

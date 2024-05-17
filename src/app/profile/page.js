@@ -2,9 +2,7 @@
 import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react";
 import GetImage from "../components/GetImage";
-import { Button } from "@mui/material";
-import { LoadingButton } from "@mui/lab";
-import { Avatar, Modal } from "antd";
+import { Avatar, Button, Modal } from "antd";
 
 
 
@@ -37,25 +35,12 @@ export default function profile() {
         getUserData()
 
     };
-    // useEffect(() => {
-    //     
-    //     async function getUserData() {
-
-
-    //     }
-
-    //     if (session) {
-    //         getUserData()
-    //        
-
-    //     }
-
-    // }, [user])
+    
     async function getUserData() {
 
         let inint = (session?.user?.name)
         inint = inint.split(" ")
-        setUserNameInitials(`${inint[1][0]}${inint[2][0]}`)
+        setUserNameInitials(`${inint[0][0]}${inint[1][0]}`)
         const url = `/api/singleUser/?id=${session?.user?.id}`
         const res = await fetch(url, { cache: "no-cache" });
         if (res.ok) { setUser(await res.json()); }
@@ -140,7 +125,7 @@ export default function profile() {
 
     return (
         <>
-            {user &&
+            {user.name != "" &&
                 <div>
 
                     <div className="flex flex-row justify-center mt-24">
@@ -157,27 +142,21 @@ export default function profile() {
                             <div className="flex  justify-center items-center sm:mx-auto sm:w-full sm:max-w-sm">
                                 <h2 className=" p-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Profile </h2>
                                 <div className="flex justify-center">
+
                                     {user.name != "" &&
-                                        <div className="relative h-20 w-20 justify-center">
-                                            {!user.url && <Avatar size={80}>{userNameInitials.toUpperCase()}</Avatar>}
-
-
+                                        <div className="flex-col  justify-center">
+                                            {!user?.url && <Avatar size={80}>{userNameInitials.toUpperCase()}</Avatar>}
                                             {user?.url && <Avatar size={80} src={user.url}  ></Avatar>}
-
-                                            <div className="my-2">
-                                                <Button color="success" variant="contained" className="m-2" onClick={() => setIsOpen(true)}>Edit</Button>
-                                                <Modal open={isOpen} onCancel={() => setIsOpen(false)} destroyOnClose footer={null} maskClosable={false} >
-                                                    <GetImage onSubmit={handleSubmit} />
-
-                                                </Modal>
-
+                                            <div className="m-3">
+                                                <Button type="primary" onClick={() => setIsOpen(true)} >Edit</Button>
                                             </div>
                                         </div>}
 
+                                    <Modal open={isOpen} onCancel={() => setIsOpen(false)} destroyOnClose footer={null} maskClosable={false} >
+                                        <GetImage onSubmit={handleSubmit} />
+                                    </Modal>
                                 </div>
-
                             </div>
-
                             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
                                 <form className="space-y-6" >
                                     <div>
@@ -192,7 +171,7 @@ export default function profile() {
                                             <input readOnly value={user.email} onChange={(e) => { setUser(user => ({ ...user, email: e.target.value })) }} required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                         </div>
                                     </div>
-                                    <LoadingButton size="small" color="success" variant="contained" onClick={changePassword}>Change Password</LoadingButton>
+                                    <Button type="primary" onClick={changePassword}>Change Password</Button>
 
                                     {clicked && <div>
 
@@ -228,12 +207,9 @@ export default function profile() {
 
                                     <div>
 
-                                        <LoadingButton onClick={updateUser} color="success" variant="contained"
-                                            loading={loading}
-
-                                        >
+                                        <Button onClick={updateUser} type="primary" loading={loading}>
                                             Save Changes
-                                        </LoadingButton>
+                                        </Button>
                                     </div>
                                     {error && <div className="bg-red-300 border  rounded-md w-fit px-3">
                                         {error}

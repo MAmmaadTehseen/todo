@@ -1,4 +1,4 @@
-import { Skeleton } from '@mui/material'
+import { Skeleton } from "antd";
 
 export default function skeleton() {
     return (
@@ -6,40 +6,89 @@ export default function skeleton() {
 
             <div className='m-2'>
 
-                <Skeleton variant="rounded" height={60} />
+                <Skeleton.Input active block width={"screen"} paragraph={false} />
             </div>
             <div className='m-2'>
 
-                <Skeleton variant="rounded" height={60} />
+                <Skeleton.Input active block width={"screen"} paragraph={false} />
             </div>
             <div className='m-2'>
 
-                <Skeleton variant="rounded" height={60} />
+                <Skeleton.Input active block width={"screen"} paragraph={false} />
             </div>
             <div className='m-2'>
 
-                <Skeleton variant="rounded" height={60} />
+                <Skeleton.Input active block width={"screen"} paragraph={false} />
             </div>
             <div className='m-2'>
 
-                <Skeleton variant="rounded" height={60} />
+                <Skeleton.Input active block width={"screen"} paragraph={false} />
             </div>
             <div className='m-2'>
 
-                <Skeleton variant="rounded" height={60} />
+                <Skeleton.Input active block width={"screen"} paragraph={false} />
             </div>
             <div className='m-2'>
 
-                <Skeleton variant="rounded" height={60} />
+                <Skeleton.Input active block width={"screen"} paragraph={false} />
             </div>
             <div className='m-2'>
 
-                <Skeleton variant="rounded" height={60} />
+                <Skeleton.Input active block width={"screen"} paragraph={false} />
             </div>
             <div className='m-2'>
 
-                <Skeleton variant="rounded" height={60} />
+                <Skeleton.Input active block width={"screen"} paragraph={false} />
             </div>
+            <div className='m-2'>
+
+                <Skeleton.Input active block width={"screen"} paragraph={false} />
+            </div>
+            <div className='m-2'>
+
+                <Skeleton.Input active block width={"screen"} paragraph={false} />
+            </div>
+            <div className='m-2'>
+
+                <Skeleton.Input active block width={"screen"} paragraph={false} />
+            </div>
+            <div className='m-2'>
+
+                <Skeleton.Input active block width={"screen"} paragraph={false} />
+            </div>
+            <div className='m-2'>
+
+                <Skeleton.Input active block width={"screen"} paragraph={false} />
+            </div>
+            <div className='m-2'>
+
+                <Skeleton.Input active block width={"screen"} paragraph={false} />
+            </div>
+            <div className='m-2'>
+
+                <Skeleton.Input active block width={"screen"} paragraph={false} />
+            </div>
+            <div className='m-2'>
+
+                <Skeleton.Input active block width={"screen"} paragraph={false} />
+            </div>
+            <div className='m-2'>
+
+                <Skeleton.Input active block width={"screen"} paragraph={false} />
+            </div>
+            <div className='m-2'>
+
+                <Skeleton.Input active block width={"screen"} paragraph={false} />
+            </div>
+            <div className='m-2'>
+
+                <Skeleton.Input active block width={"screen"} paragraph={false} />
+            </div>
+            <div className='m-2'>
+
+                <Skeleton.Input active block width={"screen"} paragraph={false} />
+            </div>
+
 
         </div>
     )

@@ -1,10 +1,13 @@
 "use client"
-import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { LoadingButton } from '@mui/lab'
+import {
+    EditOutlined,
+    DeleteOutlined
+} from '@ant-design/icons';
+
+
 import React, { useState } from 'react'
 import DeleteNote from './Dialouge'
-import { Modal } from 'antd'
+import { Button, Modal } from 'antd'
 
 export default function note({ note, id, date, getSingleTodoData }) {
     const [openMainNote, setOpenMainNote] = useState(true)
@@ -64,7 +67,7 @@ export default function note({ note, id, date, getSingleTodoData }) {
                     <div className="flex flex-row-reverse">
 
                         <button className="mx-6  " onClick={() => setIsDeleteOpen(true)}  >
-                            <FontAwesomeIcon style={{ fontSize: "15px" }} icon={faTrashCan}></FontAwesomeIcon>
+                            <DeleteOutlined style={{ fontSize: '22px' }} />
                         </button>
 
                         <Modal centered open={isDeleteOpen} onCancel={() => setIsDeleteOpen(false)} footer={null} maskClosable={false} mask={true} closeIcon={false} width={"fit_content"} >
@@ -72,7 +75,7 @@ export default function note({ note, id, date, getSingleTodoData }) {
                         </Modal>
 
 
-                        <button onClick={handleUpdate}><FontAwesomeIcon style={{ fontSize: "15px" }} icon={faPenToSquare}></FontAwesomeIcon></button>
+                        <button onClick={handleUpdate}><EditOutlined style={{ fontSize: '22px' }} /></button>
 
 
 
@@ -85,7 +88,6 @@ export default function note({ note, id, date, getSingleTodoData }) {
                 <div className='flex justify-around'>
 
                     <p className='text-center text-sm '>Created on :{date.slice(0, 10)}    </p>
-                    {/* <p className='text-center text-sm '>At: {date.slice(-13, -5)}    </p> */}
                 </div>
             </div>}
             {openUpdateNote && <div className={` flex justify-between bg-green-300 border border-green-700 p-1 m-2`}>
@@ -93,7 +95,7 @@ export default function note({ note, id, date, getSingleTodoData }) {
                     <input autoFocus={focus} className='bg-green-300 px-1' type='text' value={note2} onChange={(e) => { setNote2(e.target.value) }} />
                 </div>
 
-                <LoadingButton loading={noteUpdate} disabled={noteUpdate} color='secondary' variant="contained" className='  border-gray-600 rounded-md  text-green-50 m-1 p-1' onClick={updateNote}>Update</LoadingButton>
+                <Button loading={noteUpdate} disabled={noteUpdate} type="primary" className='  border-gray-600 rounded-md  text-green-50 m-1 p-1' onClick={updateNote}>Update</Button>
 
             </div>}
         </div>
